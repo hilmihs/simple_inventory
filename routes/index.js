@@ -11,6 +11,14 @@ module.exports = function (db) {
     })
     
   });
+  router.get('/', function (req, res, next) {
+    db.query('select * from simple_inventory', (err, rows) => {
+      if (err) console.log(err)
+      console.log(rows.rows[0])
+      res.render('sidebars', { rows: rows.rows, moment });
+    })
+    
+  })
 
   return router;
 }
