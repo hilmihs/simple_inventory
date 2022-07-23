@@ -35,6 +35,7 @@
 
 
   <style>
+    
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
@@ -71,8 +72,8 @@
     .nav-scroller {
       position: relative;
       z-index: 2;
-      height: 2.75rem;
-      overflow-y: hidden;
+      height: calc(100% - 100px);
+      overflow-y: scroll !important
     }
 
     .nav-scroller .nav {
@@ -80,44 +81,26 @@
       flex-wrap: nowrap;
       padding-bottom: 1rem;
       margin-top: -1px;
-      overflow-x: auto;
+      overflow-x: scroll !important;
       text-align: center;
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
+
     }
 
     /* Position and style the close
         button at top right corner */
     .sidebar .closebtn {
-      position: absolute;
+      position: relative;
       top: 0;
       right: 25px;
       font-size: 36px;
       margin-left: 50px;
     }
 
-    /* The button used to open the sidebar */
-    .openbtn {
-      font-size: 20px;
-      cursor: pointer;
-      background-color: #111;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-    }
 
-    .openbtn:hover {
-      background-color: #444;
-    }
 
-    /* Style page content - pushes the
-        page content to the right when the
-        sidebar is opened */
-    #main {
-      /* If you want a transition effect */
-      transition: margin-left 0.5s;
-      padding: 20px;
-    }
+
 
     /* On smaller screens, where height is
         less than 450px, change the style of
@@ -131,6 +114,11 @@
       .sidebar a {
         font-size: 18px;
       }
+    }
+
+    body {
+      margin: 0;
+      /*use this to ensure left most content goes all the way to border of page */
     }
   </style>
 
@@ -238,11 +226,11 @@
     </symbol>
   </svg>
 
-  <main class="d-flex flex-nowrap">
+  <main class="d-flex flex-nowrap" style="overflow: scroll;">
     <h1 class="visually-hidden">Sidebars examples</h1>
 
 
-    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" id="mySidebar" style="width: 225px;">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" id="mySidebar" style="width: 225px; margin-bottom: -100%;">
 
       <a href="https://getbootstrap.com/"
         class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
@@ -320,14 +308,114 @@
       <div class="container">
         <h1 style="margin-left: 250px;">Simple Inventory</h1>
       </div>
-
-
-      <div class="container">
-        <button type="button" class="btn btn-info" style="margin-right: 20px"><i class="bi bi-file-earmark-plus" style="margin-right: 10px;" ></i>Add Data</button>
-        <button type="button" class="btn btn-info" style="margin-right: 20px"><i class="bi bi-trash3" style="margin-right: 10px;"></i>Delete Data</button>
-        <button type="button" class="btn btn-info" style="margin-right: 20px"><i class="bi bi-pencil-square" style="margin-right: 10px;"></i>Edit Data</button>
+      <div class="container" style="float: left;
+clear: none;">
+        <div class="card"
+          style="width: 20%; padding: 2%; margin-bottom: 1%;  background-color: turquoise;float: left; clear: none;">
+          <h6 style="margin-bottom: 5%; right:8%; bottom: 8%; position:relative; color:white">Total Barang Gudang</h6>
+          <h6 style="left:15%; top: 30%; position:relative; color:white;"><i class="bi bi-box-seam fa-4x"> </i>150</h6>
+          </i>
+        </div>
+        <div class="card"
+          style="width: 20%; padding: 2%; margin-bottom: 1%; left:3%; bottom:24.5%; position:relative; background-color: rgb(219, 235, 3); float: left; clear: none;">
+          <h6 style="margin-bottom: 5%; right:8%; bottom: 8%; position:relative; color:white">Total Barang Masuk</h6>
+          <h6 style="left:15%; top: 30%; position:relative; color:white;"><i
+              class="bi bi-box-arrow-in-down fa-4x"></i>150</h6></i>
+        </div>
+        <div class="card"
+          style="width: 20%; padding: 2%; margin-bottom: 1%; margin-left: 3%; left:3%; bottom:24.5%; position:relative; background-color: yellowgreen;float: left; clear: none;">
+          <h6 style="margin-bottom: 5%; right:8%; bottom: 8%; position:relative; color:white">Total Barang Keluar </h6>
+          <h6 style="left:15%; top: 30%; position:relative; color:white;"><i class="bi bi-box-arrow-in-up fa-4x"></i>
+            150</h6></i>
+        </div>
       </div>
       <br>
+      <div class="container">
+        <button type="button" class="btn btn-info" style="margin-right: 20px"><i class="bi bi-file-earmark-plus"
+            style="margin-right: 10px;"></i>Add Data</button>
+        <button type="button" class="btn btn-info" style="margin-right: 20px"><i class="bi bi-trash3"
+            style="margin-right: 10px;"></i>Delete Data</button>
+        <button type="button" class="btn btn-info" style="margin-right: 20px"><i class="bi bi-pencil-square"
+            style="margin-right: 10px;"></i>Edit Data</button>
+      </div>
+      <br>
+      <div class="container" style="margin: 1px;">
+        <p style="color: blue;">Transaksi Barang Masuk dan Keluar
+            <label for="barang_keluar"
+            style="float: right; clear: none; position:relative; color: #111; background-color: greenyellow;">Transaksi
+            Barang Keluar</label><input type="radio" id="barang_keluar" name="barang_keluar" value="keluar"
+            style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">
+          <label for="barang_masuk"
+            style="float: right; clear: none; position:relative; margin-right: 10%; color: #111; background-color: blueviolet;">Transaksi
+            Barang Masuk</label><input type="radio" id="barang_masuk" name="barang_masuk" value="masuk"
+            style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">
+        </p>
+
+      </div>
+
+      <table class="table table-hover table-striped"  >
+        <thead class="table-primary">
+          <tr>
+            <th scope="col">Kode</th>
+            <th scope="col">Nama</th>
+            <th scope="col">Varian</th>
+            <th scope="col">Satuan</th>
+            <th scope="col">Jumlah</th>
+            <th scope="col">Harga Barang</th>
+            <th scope="col">Tanggal Masuk</th>
+            <th scope="col">Tanggal Keluar</th>
+            <th scope="col">Nama Supplier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% rows.forEach((item)=> { %>
+            <tr>
+              <th scope="row">
+                <%= item.kode_barang %>
+              </th>
+              <td>
+                <%= item.nama_barang %>
+              </td>
+              <td>
+                <%= item.varian_barang %>
+              </td>
+              <td>
+                <%= item.satuan_barang %>
+              </td>
+              <td>
+                <%= item.jumlah_barang %>
+              </td>
+              <td>
+                <%= item.harga_barang %>
+              </td>
+              <td>
+                <%= moment(item.tanggal_masuk).format('DD MMMM YYYY') %>
+              </td>
+              <td>
+                <%= moment(item.tanggal_keluar).format('DD MMMM YYYY') %>
+              </td>
+              <td>
+                <%= item.nama_supplier %>
+              </td>
+            </tr>
+            <% }) %>
+        </tbody>
+      </table>
+      <div class="container col-25" style="margin: 1px;">
+        <p style="color: blue;">Data barang dengan jumlah stok
+        <div class="input-group mb-3 col-75">
+          <label class="input-group-text" for="inputGroupSelect01">Options</label>
+          <select class="form-select" id="inputGroupSelect01" style="float: right; clear: none;">
+            <option selected>Choose...</option>
+            <option value="1">One</option>
+            <option value="2">Two</option>
+            <option value="3">Three</option>
+          </select>
+        </div>
+
+
+      </div>
+
       <table class="table table-hover table-striped">
         <thead class="table-primary">
           <tr>
@@ -376,6 +464,26 @@
             <% }) %>
         </tbody>
       </table>
+      <div class="container" style="float: left;
+clear: none; ">
+        <div class="card" style="width: 20%; padding: 2%; margin-bottom: 1%;;float: left; clear: none;">
+          <h6 style="margin-bottom: 5%; right:8%; bottom: 8%; position:relative; color:rgb(3, 7, 192)">Gudang 1</h6>
+          <h6 style="left:15%; top: 30%; position:relative; color:rgb(3, 7, 192);"><i class="bi bi-boxes fa-4x"></i> 150
+          </h6></i>
+        </div>
+        <div class="card"
+          style="width: 20%; padding: 2%; margin-bottom: 1%; left:3%; bottom:24.5%; position:relative; float: left; clear: none;">
+          <h6 style="margin-bottom: 5%; right:8%; bottom: 8%; position:relative; color:rgb(0, 92, 15)">Gudang 2</h6>
+          <h6 style="left:15%; top: 30%; position:relative; color:rgb(0, 92, 15);"><i class="bi bi-boxes fa-4x"></i> 150
+          </h6></i>
+        </div>
+        <div class="card"
+          style="width: 20%; padding: 2%; margin-bottom: 1%; margin-left: 3%; left:3%; bottom:24.5%; position:relative;float: left; clear: none;">
+          <h6 style="margin-bottom: 5%; right:8%; bottom: 8%; position:relative; color:rgb(170, 0, 212)">Gudang 3</h6>
+          <h6 style="left:15%; top: 30%; position:relative; color:rgb(170, 0, 212)  ;"><i class="bi bi-boxes fa-4x"></i>
+            150</h6></i>
+        </div>
+      </div>
     </div>
     </div>
   </main>
