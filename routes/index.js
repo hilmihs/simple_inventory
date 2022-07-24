@@ -6,16 +6,14 @@ module.exports = function (db) {
   router.get('/', function (req, res, next) {
     db.query('select * from simple_inventory', (err, rows) => {
       if (err) console.log(err)
-      console.log(rows.rows[0])
       res.render('sidebars', { rows: rows.rows, moment });
     })
     
   });
-  router.get('/', function (req, res, next) {
-    db.query('select * from simple_inventory', (err, rows) => {
+  router.get('/suppliers', function (req, res, next) {
+    db.query('select * from supplier', (err, rows) => {
       if (err) console.log(err)
-      console.log(rows.rows[0])
-      res.render('sidebars', { rows: rows.rows, moment });
+      res.render('supplier', { rows: rows.rows, moment });
     })
     
   })

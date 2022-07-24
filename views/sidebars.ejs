@@ -72,8 +72,8 @@
     .nav-scroller {
       position: relative;
       z-index: 2;
-      height: calc(100% - 100px);
-      overflow-y: scroll !important
+      height: 2.75rem;
+      overflow-y: hidden;
     }
 
     .nav-scroller .nav {
@@ -81,23 +81,23 @@
       flex-wrap: nowrap;
       padding-bottom: 1rem;
       margin-top: -1px;
-      overflow-x: scroll !important;
+      overflow-x: auto;
       text-align: center;
       white-space: nowrap;
       -webkit-overflow-scrolling: touch;
-
     }
 
     /* Position and style the close
         button at top right corner */
     .sidebar .closebtn {
-      position: relative;
+      position: fixed;
       top: 0;
       right: 25px;
       font-size: 36px;
       margin-left: 50px;
     }
 
+    
 
 
 
@@ -230,7 +230,7 @@
     <h1 class="visually-hidden">Sidebars examples</h1>
 
 
-    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" id="mySidebar" style="width: 225px; margin-bottom: -100%;">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark sidebar" id="mySidebar" style="width: 225px; margin-bottom: -25%;">
 
       <a href="https://getbootstrap.com/"
         class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
@@ -241,12 +241,21 @@
       <hr>
       <ul class="nav nav-pills flex-column mb-auto">
         <li class="nav-item">
-          <a href="https://getbootstrap.com/docs/5.2/examples/sidebars/#" class="nav-link active" aria-current="page">
+          <a href="/" class="nav-link active" aria-current="page">
             <svg class="bi pe-none me-2" width="15" height="16">
               <use xlink:href="#home"></use>
             </svg>
             Home
 
+          </a>
+        </li>
+        <li>
+          <a href="/suppliers" class="nav-link text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+              <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+              <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+            </svg>
+            Supplier
           </a>
         </li>
         <li>
@@ -259,6 +268,7 @@
             Data Barang
           </a>
         </li>
+       
         <li>
           <a href="https://getbootstrap.com/docs/5.2/examples/sidebars/#" class="nav-link text-white">
             <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;" width="16" height="16"
@@ -401,23 +411,23 @@ clear: none;">
             <% }) %>
         </tbody>
       </table>
-      <div class="container col-25" style="margin: 1px;">
-        <p style="color: blue;">Data barang dengan jumlah stok
-        <div class="input-group mb-3 col-75">
-          <label class="input-group-text" for="inputGroupSelect01">Options</label>
-          <select class="form-select" id="inputGroupSelect01" style="float: right; clear: none;">
-            <option selected>Choose...</option>
-            <option value="1">One</option>
-            <option value="2">Two</option>
-            <option value="3">Three</option>
+      <div class="container" style="margin: 1px;">
+        <p style="color: blue; height: 15px;">Data barang dengan jumlah stok
+          <select class="form-select" id="inputGroupSelect01" style="float: right; clear: none; margin-bottom: 2%; margin-right: 0.5%; width: 30%;">
+            <option selected style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">Choose...</option>
+            <option value="1" style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">One</option>
+            <option value="2" style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">Two</option>
+            <option value="3" style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%; width: 5px;">Three</option>
           </select>
-        </div>
+  
+    
+        </p>
 
 
       </div>
 
-      <table class="table table-hover table-striped">
-        <thead class="table-primary">
+      <table class="table table-hover table-striped table-success">
+        <thead class="table-info">
           <tr>
             <th scope="col">Kode</th>
             <th scope="col">Nama</th>
