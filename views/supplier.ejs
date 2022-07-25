@@ -352,10 +352,10 @@
             <form action="" method="get">
                 <div class="row">
                 <div class="col-25">
-                    <label for="kode">Kode Supplier</label>
+                    <label for="cari_id">Kode Supplier</label>
                 </div>
                 <div class="col-75">
-                    <input type="number" id="id" name="id" placeholder="ID" value=""><br>
+                    <input type="text" id="cari_id" name="cari_id" placeholder="ID" ><br>
                 </div>
                 </div>
                 <div class="row">
@@ -408,12 +408,12 @@
                                 <%= item.email %>
                             </td>
                             <td>
-                                <a href="/suppliers/delete/<%=  item.id_supplier %>"><button type="button" class="btn btn-info btn-sm btn-edit" ><i class="bi bi-trash3"
+                                <a href="/suppliers/delete/<%=  item.id_supplier %>"><button type="button" class="btn btn-info btn-sm"><i class="bi bi-trash3"
                                     style="margin-right: 10px;"></i>Delete</button></a>
-                                <a href="/suppliers/edit/<%=  item.id_supplier %>"><button type="button" class="btn btn-info btn-sm" ><i class="bi bi-pencil-square"
+                                <a href="/suppliers/edit/<%=  item.id_supplier %>"><button type="button" class="btn btn-info btn-sm"><i class="bi bi-pencil-square"
                                     style="margin-right: 10px;"></i>Edit</button></a>
-                                    <button type="button" class="btn btn-info btn-sm" ><i class="bi bi-info-circle"
-                                        style="margin-right: 10px;" iddata="<%= item.id_supplier %>"></i>Info Detail</button>
+                                    <button type="button" class="btn btn-info btn-sm btn-edit" iddata="<%= item.id_supplier %>"><i class="bi bi-info-circle"
+                                        style="margin-right: 10px;" ></i>Info Detail</button>
                             </td>
                         </tr>
                         <% }) %>
@@ -426,7 +426,7 @@
                         <label for="kode">Kode Supplier</label>
                     </div>
                     <div class="col-75">
-                        <input type="number" id="id" name="id" placeholder="ID" value="" disabled><br>
+                        <input type="number" id="id" name="id" placeholder="ID" ><br>
                     </div>
                 </div>
                 <div class="row">
@@ -434,7 +434,7 @@
                         <label for="nama">Nama Supplier</label>
                     </div>
                     <div class="col-75">
-                        <input type="text" id="nama" name="nama" placeholder="Nama" value="" disabled><br>
+                        <input type="text" id="nama" name="nama" placeholder="Nama" ><br>
                     </div>
                 </div>
                 <div class="row">
@@ -442,7 +442,7 @@
                         <label for="nama">Alamat Supplier</label>
                     </div>
                     <div class="col-75">
-                        <input type="text" id="alamat" name="alamat" placeholder="Alamat" value="" disabled><br>
+                        <input type="text" id="alamat" name="alamat" placeholder="Alamat"   ><br>
                     </div>
                 </div>
                 <div class="row">
@@ -450,7 +450,7 @@
                         <label for="nama">Telepon</label>
                     </div>
                     <div class="col-75">
-                        <input type="number" id="telepon" name="telepon" placeholder="Telepon" value="" disabled><br>
+                        <input type="number" id="telepon" name="telepon" placeholder="Telepon" ><br>
                     </div>
                 </div>
                 <div class="row">
@@ -458,7 +458,7 @@
                         <label for="nama">Email</label>
                     </div>
                     <div class="col-75">
-                        <input type="number" step="any" id="email" name="email" placeholder="Email" value="" disabled><br>
+                        <input type="number" step="any" id="email" name="email" placeholder="Email" ><br>
                     </div>
                 </div>
         </div>
@@ -499,7 +499,6 @@
         $(document).ready(function () {
             $('table tbody').on('click', '.btn-edit', function () {
                 const id = $this.attr('iddata')
-                console.log(id)
                 infoData(id)
             })
         })

@@ -17,6 +17,17 @@ module.exports = function (db) {
     })
   })
 
+  router.post('/suppliers', function (req, res) { 
+    const { id_supplier, nama_supplier } = req.body
+    let search = []
+    if (id_supplier) {
+      
+    }
+    db.query('select * from supplier', (err, rows) => {
+      if (err) console.log(err)
+      res.render('supplier', { rows: rows.rows });
+    })
+  })
 
   router.get('/suppliers/info/:id', (req, res) => {
     console.log(req.params.id)
