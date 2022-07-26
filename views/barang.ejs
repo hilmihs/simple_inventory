@@ -277,7 +277,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="/suppliers" class="nav-link text-white  <%= currentDir == 'suppliers' ? 'active' : '' %>">
+                    <a href="/suppliers" class="nav-link text-white <%= currentDir == 'suppliers' ? 'active' : '' %>">
                         <svg xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;" width="16" height="16"
                             fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
@@ -354,7 +354,7 @@
                     </div>
                 </li>
             </ul>
-            <hr>
+        </hr>
 
         </div>
 
@@ -367,11 +367,11 @@
             <br>
 
             <br>
-            <h2>Cari Supplier</h2>
+            <h2>Cari Barang</h2>
             <form action="" method="get">
                 <div class="row">
                     <div class="col-25">
-                        <label for="cari_id">Kode Supplier</label>
+                        <label for="cari_id">Kode Barang</label>
                     </div>
                     <div class="col-75">
                         <input type="text" id="cari_id" name="cari_id" placeholder="ID"><br>
@@ -379,7 +379,7 @@
                 </div>
                 <div class="row">
                     <div class="col-25">
-                        <label for="nama">Nama Supplier</label>
+                        <label for="nama">Nama Barang</label>
                     </div>
                     <div class="col-75">
                         <input type="text" id="cari_nama" name="cari_nama" placeholder="Nama" value=""><br>
@@ -387,11 +387,11 @@
                 </div>
                 <div class="container" style="margin-top: 25px;">
                     <button type="submit" class="btn btn-info" style="margin-right: 20px"><i class="bi bi-search"
-                            style="margin-right: 10px;"></i>Search Supplier</button>
+                            style="margin-right: 10px;"></i>Search Barang</button>
             </form>
-            <a href="/suppliers"><button type="button" class="btn btn-warning" style="margin-right: 20px"><i
+            <a href="/barang"><button type="button" class="btn btn-warning" style="margin-right: 20px"><i
                         class="bi bi-arrow-clockwise" style="margin-right: 10px;"></i>Reset</button></a>
-            <a href="/suppliers/add"><button type="button" class="btn btn-info"
+            <a href="/barang/add"><button type="button" class="btn btn-info"
                     style="margin-right: 20px; float: right; clear: none;"><i class="bi bi-file-earmark-plus"
                         style="margin-right: 10px;"></i>Add Data</button></a>
         </div>
@@ -402,7 +402,6 @@
                 <tr>
                     <th scope="col">ID</th>
                     <th scope="col">Nama Supplier</th>
-                    <th scope="col">Alamat</th>
                     <th scope="col" colspan="2">Action</th>
                 </tr>
             </thead>
@@ -410,34 +409,32 @@
                 <% rows.forEach((item)=> { %>
                     <tr>
                         <th scope="row">
-                            <%= item.id_supplier %>
+                            <%= item.id_barang %>
                         </th>
                         <td>
-                            <%= item.nama_supplier %>
+                            <%= item.nama_barang %>
                         </td>
+
                         <td>
-                            <%= item.alamat_supplier %>
-                        </td>
-                        <td>
-                            <a href="/suppliers/delete/<%=  item.id_supplier %>"><button type="button"
+                            <a href="/barang/delete/<%=  item.id_barang %>"><button type="button"
                                     class="btn btn-info btn-sm" style="margin-right: 15px;"><i class="bi bi-trash3"
                                         style="margin-right: 10px;"></i>Delete</button></a>
-                            <a href="/suppliers/edit/<%=  item.id_supplier %>"><button type="button"
+                            <a href="/barang/edit/<%=  item.id_barang %>"><button type="button"
                                     class="btn btn-info btn-sm" style="margin-right: 15px;"><i
                                         class="bi bi-pencil-square" style="margin-right: 10px;"></i>Edit</button></a>
                             <button type="button" class="btn btn-info btn-sm btn-edit"
-                                onclick="infoData('<%= item.id_supplier %>')" style="margin-right: 15px;"><i
+                                onclick="infoData('<%= item.id_barang %>')" style="margin-right: 15px;"><i
                                     class="bi bi-info-circle" style="margin-right: 10px;"></i>Info Detail</button>
                         </td>
                     </tr>
                     <% }) %>
             </tbody>
         </table>
-        <h2>Detail Supplier</h2>
+        <h2>Detail Barang</h2>
         <form action="" method="get">
             <div class="row">
                 <div class="col-25">
-                    <label for="kode">Kode Supplier</label>
+                    <label for="kode">Kode Barang</label>
                 </div>
                 <div class="col-75">
                     <input type="text" id="id" name="id" placeholder="ID" disabled><br>
@@ -445,34 +442,10 @@
             </div>
             <div class="row">
                 <div class="col-25">
-                    <label for="nama">Nama Supplier</label>
+                    <label for="nama">Nama Barang</label>
                 </div>
                 <div class="col-75">
                     <input type="text" id="nama" name="nama" placeholder="Nama" disabled><br>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="nama">Alamat Supplier</label>
-                </div>
-                <div class="col-75">
-                    <input type="text" id="alamat" name="alamat" placeholder="Alamat" disabled><br>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="nama">Telepon</label>
-                </div>
-                <div class="col-75">
-                    <input type="number" id="telepon" name="telepon" placeholder="Telepon" disabled><br>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-25">
-                    <label for="nama">Email</label>
-                </div>
-                <div class="col-75">
-                    <input type="email" step="any" id="email" name="email" placeholder="Email" disabled><br>
                 </div>
             </div>
             </div>
@@ -491,16 +464,13 @@
         const infoData = (id) => {
             $.ajax({
                 method: "GET",
-                url: `http://localhost:3000/suppliers/info/${id}`,
+                url: `http://localhost:3000/barang/info/${id}`,
                 dataType: "json"
             })
                 .done(function (response) {
                     console.log(response)
-                    $('#id').val(response.id_supplier)
-                    $('#nama').val(response.nama_supplier)
-                    $('#alamat').val(response.alamat_supplier)
-                    $('#telepon').val(response.telepon)
-                    $('#email').val(response.email)
+                    $('#id').val(response.id_barang)
+                    $('#nama').val(response.nama_barang)
                 }).fail(function (err) {
                     alert(`gagal pake jquery, ${err}`)
                 })
