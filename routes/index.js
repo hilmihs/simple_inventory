@@ -10,33 +10,50 @@ module.exports = function (db) {
     })
 
   });
-  router.get('/suppliers', function (req, res) {
-    db.query('select * from supplier', (err, rows) => {
-      if (err) console.log(err)
-      res.render('supplier', { rows: rows.rows });
-    })
-  })
 
-  router.post('/suppliers', function (req, res) { 
-    const { id_supplier, nama_supplier } = req.body
+  router.get('/suppliers', function (req, res) { 
+    const { cari_id, cari_nama } = req.query
     let search = []
-    if (id_supplier) {
-      
+    let count = 1
+    let syntax = []
+    let sql = 'select * from supplier'
+    if (cari_id) {
+      sql += ' WHERE '
+      search.push(`_${cari_id}_`)
+      syntax.push(`id_supplier LIKE $${count}`)
+      count++
+    } 
+    if (cari_nama) {
+      if (!sql.includes(' WHERE ')) {
+        sql += ' WHERE'
+      }
+      search.push(cari_nama)
+      syntax.push(` nama_supplier LIKE $${count}`)
+      count++
     }
-    db.query('select * from supplier', (err, rows) => {
+    
+    if (syntax.length > 0) {
+      sql += syntax.join(' AND ')
+      sql += ` ORDER BY id_supplier ASC`
+    }
+   
+    db.query(sql, search, (err, rows) => {
       if (err) console.log(err)
       res.render('supplier', { rows: rows.rows });
     })
   })
 
   router.get('/suppliers/info/:id', (req, res) => {
-    console.log(req.params.id)
-    db.query('SELECT * FROM supplier WHERE id_supplier = $1 ORDER BY id_supplier', [req.params.id], (err, rows) => {
+  
+    db.query('SELECT * FROM supplier WHERE id_supplier = $1', [req.params.id], (err, rows) => {
       if (err) {
-        res.status(500).json({ message: "error ambil data", error: `${err}` })
         console.log(err)
+        return res.status(500).json({ message: "error ambil data", error: `${err}` })
       }
-      const data = rows.rows
+      if (rows.rows.length == 0) {
+        return res.status(500).json({ message: "data not found"})
+      }
+      const data = rows.rows[0]
       res.status(200).json(data)
     })
   })
@@ -56,9 +73,9 @@ module.exports = function (db) {
   })
 
   router.get('/suppliers/edit/:id', (req, res) => {
-    console.log(req.params.id)
+   
     db.query('SELECT * FROM supplier WHERE id_supplier = $1', [req.params.id], (err, rows) => {
-      console.log(rows.rows, req.params.id)
+   
       if (err) {
         return console.error(err.message);
       }
@@ -78,7 +95,7 @@ module.exports = function (db) {
   })
 
   router.get('/suppliers/delete/:id', (req, res) => {
-    console.log(req.params.id)
+  
     db.query('DELETE FROM supplier WHERE id_supplier = $1', [req.params.id], (err) => {
       if (err) {
         return console.error(err.message);
