@@ -72,7 +72,7 @@ module.exports = function (db) {
       if (err) {
         return console.error(err.message);
       }
-      res.render('edit_barang', { rows: rows.rows, currentDir: 'settingdata', current: 'barang' });
+      res.render('barang_edit', { rows: rows.rows, currentDir: 'settingdata', current: 'barang' });
     })
   })
 

@@ -56,8 +56,8 @@ module.exports = function (db) {
   })
 
   router.post('/add', function (req, res) {
-    db.query(`INSERT INTO gudang(id_gudang, nama_gudang, keterangan) 
-    VALUES ($1, $2, $3)`, [req.body.id, req.body.nama, req.body.keterangan], (err) => {
+    db.query(`INSERT INTO gudang(id_gudang, nama_gudang, alamat) 
+    VALUES ($1, $2, $3)`, [req.body.id, req.body.nama, req.body.alamat], (err) => {
       if (err) {
         return console.error(err.message);
       }
@@ -72,15 +72,15 @@ module.exports = function (db) {
       if (err) {
         return console.error(err.message);
       }
-      res.render('edit_gudang', { rows: rows.rows, currentDir: 'settingdata', current: 'gudang' });
+      res.render('gudang_edit', { rows: rows.rows, currentDir: 'settingdata', current: 'gudang' });
     })
   })
 
   router.post('/edit/:id', function (req, res) {
     db.query(`UPDATE gudang set 
     nama_gudang = $1,
-    keterangan = $2
-    WHERE id_gudang = $3`, [req.body.nama, req.body.keterangan, req.body.id], (err) => {
+    alamat = $2
+    WHERE id_gudang = $3`, [req.body.nama, req.body.alamat, req.body.id], (err) => {
       if (err) {
         return console.error(err.message);
       }

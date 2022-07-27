@@ -72,7 +72,7 @@ module.exports = function (db) {
       if (err) {
         return console.error(err.message);
       }
-      res.render('edit_satuan', { rows: rows.rows, currentDir: 'settingdata', current: 'satuan' });
+      res.render('satuan_edit', { rows: rows.rows, currentDir: 'settingdata', current: 'satuan' });
     })
   })
 
