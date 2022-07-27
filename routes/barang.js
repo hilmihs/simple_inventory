@@ -3,12 +3,18 @@ var router = express.Router();
 var moment = require('moment')
 module.exports = function (db) {
 
-  router.get('/', function (req, res) { 
+  router.get('/', function (req, res) {
+    const page = req.query.page || 1
+    const limit = 3
+    const offset = (page - 1) * limit
+
+
     const { cari_id, cari_nama } = req.query
     let search = []
     let count = 1
     let syntax = []
-    let sql = 'select * from barang'
+    let sql_count = 'SELECT count(*) AS total FROM barang'
+    let sql = 'SELECT * FROM barang'
     if (cari_id) {
       sql += ' WHERE '
       search.push(`%${cari_id}%`)
@@ -28,10 +34,14 @@ module.exports = function (db) {
       sql += syntax.join(' AND ')
       sql += ` ORDER BY id_barang ASC`
     }
+    db.query(sql_count, search, (err, data) => {
+      if (err) console.log (err)
+      const pages = Math.ceil(data.rows[0].total / limit)
     db.query(sql, search, (err, rows) => {
       if (err) console.log(err)
-      res.render('barang', { rows: rows.rows, currentDir: 'settingdata', current: 'barang' });
+      res.render('barang', { rows: rows.rows, currentDir: 'settingdata', current: 'barang', pages, page });
     })
+  })
   })
 
   router.get('/info/:id', (req, res) => {
