@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const fileUpload = require('express-fileupload');
 
 const { Pool } = require('pg')
 const pool = new Pool({
@@ -19,6 +20,7 @@ var suppliersRouter = require('./routes/suppliers')(pool)
 var barangRouter = require('./routes/barang')(pool)
 var satuanRouter = require('./routes/satuan')(pool)
 var gudangRouter = require('./routes/gudang')(pool)
+var varianRouter = require('./routes/varian')(pool)
 
 var app = express();
 
@@ -31,6 +33,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(fileUpload());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -38,6 +41,7 @@ app.use('/suppliers', suppliersRouter);
 app.use('/barang', barangRouter);
 app.use('/satuan', satuanRouter);
 app.use('/gudang', gudangRouter);
+app.use('/varian', varianRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

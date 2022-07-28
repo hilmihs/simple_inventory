@@ -1,0 +1,184 @@
+<%- include('partials/header') %>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="bootstrap" viewBox="0 0 118 94">
+      <title>Inventory</title>
+      <path fill-rule="evenodd" clip-rule="evenodd"
+        d="M24.509 0c-6.733 0-11.715 5.893-11.492 12.284.214 6.14-.064 14.092-2.066 20.577C8.943 39.365 5.547 43.485 0 44.014v5.972c5.547.529 8.943 4.649 10.951 11.153 2.002 6.485 2.28 14.437 2.066 20.577C12.794 88.106 17.776 94 24.51 94H93.5c6.733 0 11.714-5.893 11.491-12.284-.214-6.14.064-14.092 2.066-20.577 2.009-6.504 5.396-10.624 10.943-11.153v-5.972c-5.547-.529-8.934-4.649-10.943-11.153-2.002-6.484-2.28-14.437-2.066-20.577C105.214 5.894 100.233 0 93.5 0H24.508zM80 57.863C80 66.663 73.436 72 62.543 72H44a2 2 0 01-2-2V24a2 2 0 012-2h18.437c9.083 0 15.044 4.92 15.044 12.474 0 5.302-4.01 10.049-9.119 10.88v.277C75.317 46.394 80 51.21 80 57.863zM60.521 28.34H49.948v14.934h8.905c6.884 0 10.68-2.772 10.68-7.727 0-4.643-3.264-7.207-9.012-7.207zM49.948 49.2v16.458H60.91c7.167 0 10.964-2.876 10.964-8.281 0-5.406-3.903-8.178-11.425-8.178H49.948z">
+      </path>
+    </symbol>
+    <symbol id="home" viewBox="0 0 16 16">
+  </svg>
+
+  <main class="d-flex flex-nowrap">
+    <%- include('partials/menu') %>
+
+    <div class="  b-example-vr"></div>
+    <div class="container" style="overflow: scroll;">
+        <div class="container">
+            <h1 style="margin-left: 250px;">Simple Inventory</h1>
+        </div>
+
+        <br>
+
+        <br>
+        <h2>Cari Varian</h2>
+        <form action="" method="get">
+            <div class="row">
+                <div class="col-25">
+                    <label for="cari_id">Kode Varian</label>
+                </div>
+                <div class="col-75">
+                    <input type="text" id="cari_id" name="cari_id" placeholder="ID"><br>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-25">
+                    <label for="cari_nama">Nama Varian</label>
+                </div>
+                <div class="col-75">
+                    <input type="text" id="cari_nama" name="cari_nama" placeholder="Nama" value=""><br>
+                </div>
+            </div>
+            <div class="container" style="margin-top: 25px;">
+                <button type="submit" class="btn btn-info" style="margin-right: 20px"><i class="bi bi-search"
+                        style="margin-right: 10px;"></i>Search Varian</button>
+        </form>
+        <a href="/varian"><button type="button" class="btn btn-warning" style="margin-right: 20px"><i
+                    class="bi bi-arrow-clockwise" style="margin-right: 10px;"></i>Reset</button></a>
+        <a href="/varian/add"><button type="button" class="btn btn-info"
+                style="margin-right: 20px; float: right; clear: none;"><i class="bi bi-file-earmark-plus"
+                    style="margin-right: 10px;"></i>Add Varian</button></a>
+    </div>
+
+
+    <table class="table table-hover table-striped" style="margin-top: 25px;">
+        <thead class="table-primary">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Nama Varian</th>
+                <th scope="col" colspan="2">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% rows.forEach((item)=> { %>
+                <tr>
+                    <th scope="row">
+                        <%= item.id_varian %>
+                    </th>
+                    <td>
+                        <%= item.nama_varian %>
+                    </td>
+                    <td>
+                        <a href="/varian/delete/<%=  item.id_varian %>"><button type="button"
+                                class="btn btn-info btn-sm" style="margin-right: 15px;"><i class="bi bi-trash3"
+                                    style="margin-right: 10px;"></i>Delete</button></a>
+                        <a href="/varian/edit/<%=  item.id_varian %>"><button type="button"
+                                class="btn btn-info btn-sm" style="margin-right: 15px;"><i
+                                    class="bi bi-pencil-square" style="margin-right: 10px;"></i>Edit</button></a>
+                        <button type="button" class="btn btn-info btn-sm btn-edit"
+                            onclick="infoData('<%= item.id_varian %>')" style="margin-right: 15px;"><i
+                                class="bi bi-info-circle" style="margin-right: 10px;"></i>Info Detail</button>
+                    </td>
+                </tr>
+                <% }) %>
+        </tbody>
+    </table>
+    <h2>Detail Varian</h2>
+    <form action="" method="get">
+        <div class="row">
+            <div class="col-25">
+                <label for="kode">Kode Varian</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="id" name="id" placeholder="ID" disabled><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="nama">Nama Varian</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="nama" name="nama" placeholder="Nama" disabled><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="barang">Barang</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="barang" name="barang" placeholder="Barang" disabled><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="stok">Stok</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="stok" name="stok" placeholder="Stok" disabled><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="harga">Harga</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="harga" name="harga" placeholder="Harga" disabled><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="satuan">Satuan</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="satuan" name="satuan" placeholder="Satuan" disabled><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="gudang">Gudang</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="gudang" name="gudang" placeholder="Gudang" disabled><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
+                <label for="gambar">Gambar</label>
+            </div>
+            <div class="col-75">
+                <img src="/images/no_image.jpg" alt="kosong" width="50" id="gambar" name="gambar" placeholder="gambar" disabled><br>
+            </div>
+        </div>
+        </div>
+</main>
+
+
+  <%- include('partials/script-footer') %>
+  <script>
+    const infoData = (id) => {
+        $.ajax({
+            method: "GET",
+            url: `http://localhost:3000/varian/info/${id}`,
+            dataType: "json"
+        })
+            .done(function (response) {
+                console.log(response)
+                $('#id').val(response.id_varian)
+                $('#nama').val(response.nama_varian)
+                $('#barang').val(`${response.id_barang} - ${response.nama_barang}`)
+                $('#stok').val(response.stok_varian)
+                $('#harga').val(response.harga_varian)
+                $('#satuan').val(`${response.id_satuan} - ${response.nama_satuan}`)
+                $('#gudang').val(`${response.id_gudang} - ${response.nama_gudang}`)
+                $('#gambar').attr("src", `/gambar/${response.gambar_varian}`)
+            }).fail(function (err) {
+                alert(`gagal pake jquery, ${err}`)
+            })
+
+        $(document).ready(function () {
+
+        })
+    }
+</script>
+    <%- include('partials/footer') %>

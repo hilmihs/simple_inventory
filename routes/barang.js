@@ -34,8 +34,10 @@ module.exports = function (db) {
       sql += syntax.join(' AND ')
       sql += ` ORDER BY id_barang ASC`
     }
+    
     db.query(sql_count, search, (err, data) => {
       if (err) console.log (err)
+      
       const pages = Math.ceil(data.rows[0].total / limit)
     db.query(sql, search, (err, rows) => {
       if (err) console.log(err)

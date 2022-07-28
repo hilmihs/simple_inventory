@@ -28,6 +28,7 @@ module.exports = function (db) {
             sql += syntax.join(' AND ')
             sql += ` ORDER BY id_supplier ASC`
         }
+        console.log(sql)
         db.query(sql, search, (err, rows) => {
             if (err) console.log(err)
             console.log(req.url)
@@ -57,6 +58,7 @@ module.exports = function (db) {
     })
 
     router.post('/add', function (req, res) {
+
         db.query(`INSERT INTO supplier(id_supplier, nama_supplier, alamat_supplier, telepon, email) 
     VALUES ($1, $2, $3, $4, $5)`, [req.body.id, req.body.nama, req.body.alamat, req.body.telepon, req.body.email], (err) => {
             if (err) {
