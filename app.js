@@ -12,7 +12,8 @@ const pool = new Pool({
   password: process.env.DB_PASS,
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
-  database: process.env.DB_NAME
+  database: process.env.DB_NAME,
+  ssl: true
 })
 
 var indexRouter = require('./routes/index')(pool);
