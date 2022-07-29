@@ -120,7 +120,7 @@
         const infoData = (id) => {
             $.ajax({
                 method: "GET",
-                url: `http://localhost:3000/gudang/info/${id}`,
+                url: `/gudang/info/${id}`,
                 dataType: "json"
             })
                 .done(function (response) {

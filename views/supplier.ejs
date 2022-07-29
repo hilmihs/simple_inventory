@@ -137,7 +137,7 @@
         const infoData = (id) => {
             $.ajax({
                 method: "GET",
-                url: `http://localhost:3000/suppliers/info/${id}`,
+                url: `/suppliers/info/${id}`,
                 dataType: "json"
             })
                 .done(function (response) {
