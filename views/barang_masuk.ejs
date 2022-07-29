@@ -1,0 +1,211 @@
+<%- include('partials/header') %>
+
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="bootstrap" viewBox="0 0 118 94">
+            <title>Inventory</title>
+            <path fill-rule="evenodd" clip-rule="evenodd"
+                d="M24.509 0c-6.733 0-11.715 5.893-11.492 12.284.214 6.14-.064 14.092-2.066 20.577C8.943 39.365 5.547 43.485 0 44.014v5.972c5.547.529 8.943 4.649 10.951 11.153 2.002 6.485 2.28 14.437 2.066 20.577C12.794 88.106 17.776 94 24.51 94H93.5c6.733 0 11.714-5.893 11.491-12.284-.214-6.14.064-14.092 2.066-20.577 2.009-6.504 5.396-10.624 10.943-11.153v-5.972c-5.547-.529-8.934-4.649-10.943-11.153-2.002-6.484-2.28-14.437-2.066-20.577C105.214 5.894 100.233 0 93.5 0H24.508zM80 57.863C80 66.663 73.436 72 62.543 72H44a2 2 0 01-2-2V24a2 2 0 012-2h18.437c9.083 0 15.044 4.92 15.044 12.474 0 5.302-4.01 10.049-9.119 10.88v.277C75.317 46.394 80 51.21 80 57.863zM60.521 28.34H49.948v14.934h8.905c6.884 0 10.68-2.772 10.68-7.727 0-4.643-3.264-7.207-9.012-7.207zM49.948 49.2v16.458H60.91c7.167 0 10.964-2.876 10.964-8.281 0-5.406-3.903-8.178-11.425-8.178H49.948z">
+            </path>
+        </symbol>
+        <symbol id="home" viewBox="0 0 16 16">
+    </svg>
+
+    <main class="d-flex flex-nowrap">
+        <%- include('partials/menu') %>
+
+            <div class="  b-example-vr"></div>
+            <div class="container" style="overflow: scroll;">
+                <div class="container">
+                    <h1 style="margin-left: 250px;">Simple Inventory</h1>
+                </div>
+
+                <br>
+
+                <br>
+                <h2>Cari Barang Masuk</h2>
+                <form action="" method="get">
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="cari_id">Invoice Barang Masuk</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" id="cari_id" name="cari_id" placeholder="Invoice"><br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="cari_nama">Nama Varian</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="text" id="cari_nama" name="cari_nama" placeholder="Varian"><br>
+                        </div>
+                    </div>
+                    <br>
+                    <label for="cari_tanggal_awal">Cari Tanggal Barang Masuk</label>
+                    <br>
+                    <br>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="cari_tanggal_awal">Start Date</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="date" id="cari_tanggal_awal" name="cari_tanggal_awal"
+                                placeholder="Tanggal Mulai" value=""><br>
+                        </div>
+                    </div>
+                    <label for="between">to</label>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="cari_tanggal_akhir">End Date</label>
+                        </div>
+                        <div class="col-75">
+                            <input type="date" id="cari_tanggal_akhir" name="cari_tanggal_akhir"
+                                placeholder="Tanggal Akhir" value=""><br>
+                        </div>
+                    </div>
+                    <div class="container" style="margin-top: 25px;">
+                        <button type="submit" class="btn btn-info" style="margin-right: 20px"><i class="bi bi-search"
+                                style="margin-right: 10px;"></i>Search Barang Masuk</button>
+                </form>
+                <a href="/barang_masuk"><button type="button" class="btn btn-warning" style="margin-right: 20px"><i
+                            class="bi bi-arrow-clockwise" style="margin-right: 10px;"></i>Reset</button></a>
+                <a href="/barang_masuk/add"><button type="button" class="btn btn-info"
+                        style="margin-right: 20px; float: right; clear: none;"><i class="bi bi-file-earmark-plus"
+                            style="margin-right: 10px;"></i>Add Barang Masuk</button></a>
+            </div>
+
+
+            <table class="table table-hover table-striped" style="margin-top: 25px;">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col">Invoice</th>
+                        <th scope="col">Tanggal Masuk</th>
+                        <th scope="col">Nama Varian</th>
+                        <th scope="col">Stok</th>
+                        <th scope="col" colspan="2">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% rows.forEach((item)=> { %>
+                        <tr>
+                            <th scope="row">
+                                <%= item.no_invoice_beli %>
+                            </th>
+                            <td>
+                                <%= item.tanggal_pembelian ? moment(item.tanggal_pembelian).format('DD MMMM YYYY')
+                                    : 'kosong' %>
+                            </td>
+                            <td>
+                                <%= item.nama_varian %>
+                            </td>
+                            <td>
+                                <%= item.qty %>
+                            </td>
+                            <td>
+                                <a href="/barang_masuk/delete/<%=  item.no_invoice_beli %>"><button type="button"
+                                        class="btn btn-info btn-sm" style="margin-right: 15px;"><i class="bi bi-trash3"
+                                            style="margin-right: 10px;"></i>Delete</button></a>
+                                <a href="/barang_masuk/edit/<%=  item.no_invoice_beli %>"><button type="button"
+                                        class="btn btn-info btn-sm" style="margin-right: 15px;"><i
+                                            class="bi bi-pencil-square"
+                                            style="margin-right: 10px;"></i>Edit</button></a>
+                                <button type="button" class="btn btn-info btn-sm btn-edit"
+                                    onclick="infoData('<%= item.no_invoice_beli %>')" style="margin-right: 15px;"><i
+                                        class="bi bi-info-circle" style="margin-right: 10px;"></i>Info Detail</button>
+                            </td>
+                        </tr>
+                        <% }) %>
+                </tbody>
+            </table>
+            <h2>Detail Barang Masuk</h2>
+            <form action="" method="get">
+                <div class="row">
+                    <div class="col-25">
+                        <label for="kode">Invoice</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="id" name="id" placeholder="ID" disabled><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="tanggal_masuk">Tanggal Barang Masuk</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="tanggal_masuk" name="tanggal_masuk" placeholder="Tanggal Masuk"
+                            disabled><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="total_harga">Total Harga</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="integer" id="total_harga" name="total_harga" placeholder="Total Harga"
+                            disabled><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="stok">Total Stok</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="integer" id="stok" name="stok" placeholder="Total Stok" disabled><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="gudang">Gudang</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="gudang" name="gudang" placeholder="Gudang" disabled><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="supplier">Supplier</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="supplier" name="supplier" placeholder="Supplier" disabled><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="varian">Varian</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="text" id="varian" name="varian" placeholder="Varian" disabled><br>
+                    </div>
+                </div>
+
+                </div>
+    </main>
+
+
+    <%- include('partials/script-footer') %>
+        <script>
+            const infoData = (id) => {
+                $.ajax({
+                    method: "GET",
+                    url: `http://localhost:3000/barang_masuk/info/${id}`,
+                    dataType: "json"
+                })
+                    .done(function (response) {
+                        console.log(response)
+                        $('#id').val(response.no_invoice_beli)
+                        $('#tanggal_masuk').val(response.tanggal_pembelian)
+                        $('#total_harga').val(response.total_harga_beli)
+                        $('#stok').val(response.qty)
+                        $('#gudang').val(`${response.id_gudang} - ${response.nama_gudang}`)
+                        $('#supplier').val(`${response.id_supplier} - ${response.nama_supplier}`)
+                        $('#varian').val(`${response.id_varian} - ${response.nama_varian}`)
+                    }).fail(function (err) {
+                        alert(`gagal pake jquery, ${err}`)
+                    })
+
+                $(document).ready(function () {
+
+                })
+            }
+        </script>
+        <%- include('partials/footer') %>

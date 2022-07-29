@@ -1,3 +1,4 @@
+require('dotenv').config()
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -7,11 +8,11 @@ const fileUpload = require('express-fileupload');
 
 const { Pool } = require('pg')
 const pool = new Pool({
-    user: "hilmi",
-    password: "1234",
-    host: "localhost",
-    port: 5432,
-    database: "inventorygudang"
+  user: process.env.DB_USER,
+  password: process.env.DB_PASS,
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME
 })
 
 var indexRouter = require('./routes/index')(pool);
@@ -21,6 +22,7 @@ var barangRouter = require('./routes/barang')(pool)
 var satuanRouter = require('./routes/satuan')(pool)
 var gudangRouter = require('./routes/gudang')(pool)
 var varianRouter = require('./routes/varian')(pool)
+var barangMasukRouter = require('./routes/barang_masuk')(pool)
 
 var app = express();
 
@@ -42,14 +44,14 @@ app.use('/barang', barangRouter);
 app.use('/satuan', satuanRouter);
 app.use('/gudang', gudangRouter);
 app.use('/varian', varianRouter);
-
+app.use('/barang_masuk', barangMasukRouter);
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   next(createError(404));
 });
 
 // error handler
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
