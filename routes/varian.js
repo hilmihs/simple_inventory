@@ -68,6 +68,68 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang`
     })
   })
 
+  router.get('/api', (req, res) => {
+
+    db.query(`SELECT var.id_varian,
+    var.nama_varian,
+      bar.id_barang,
+    bar.nama_barang,
+      var.stok_varian,
+      var.harga_varian,
+      sat.id_satuan,
+      sat.nama_satuan,
+      gud.id_gudang,
+      gud.nama_gudang,
+      var.gambar_varian
+FROM varian var
+INNER JOIN barang bar ON bar.id_barang = var.id_barang
+INNER JOIN satuan sat ON sat.id_satuan = var.id_satuan
+INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang`, (err, rows) => {
+      if (err) {
+        console.log(err)
+        return res.status(500).json({ message: "error ambil data", error: `${err}` })
+      }
+      if (rows.rows.length == 0) {
+        return res.status(500).json({ message: "data not found" })
+      }
+      const data = rows.rows
+      data['currentDir'] = 'varian'
+      data['current'] = ''
+      res.status(200).json(data)
+    })
+  })
+
+  router.get('/api/:id', (req, res) => {
+
+    db.query(`SELECT var.id_varian,
+    var.nama_varian,
+      bar.id_barang,
+    bar.nama_barang,
+      var.stok_varian,
+      var.harga_varian,
+      sat.id_satuan,
+      sat.nama_satuan,
+      gud.id_gudang,
+      gud.nama_gudang,
+      var.gambar_varian
+FROM varian var
+INNER JOIN barang bar ON bar.id_barang = var.id_barang
+INNER JOIN satuan sat ON sat.id_satuan = var.id_satuan
+INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE var.id_barang = $1`, [req.params.id], (err, rows) => {
+      if (err) {
+        console.log(err)
+        return res.status(500).json({ message: "error ambil data", error: `${err}` })
+      }
+      if (rows.rows.length == 0) {
+        return res.status(500).json({ message: "data not found" })
+      }
+      const data = rows.rows
+      data['currentDir'] = 'varian'
+      data['current'] = ''
+      res.status(200).json(data)
+    })
+  })
+
   router.get('/info/:id', (req, res) => {
 
     db.query(`SELECT var.id_varian,
@@ -109,7 +171,7 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE id_varian = $1;`, [
           const barang = rowsB.rows
           const satuan = rowsS.rows
           const gudang = rowsG.rows
-          res.render('varian_add', { currentDir: 'varian', current: '', barang, satuan, gudang });
+          res.render('varian_add', { currentDir: 'varian', current: '', barang, satuan, gudang, moment});
         })
       })
     })
