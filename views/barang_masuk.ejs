@@ -32,14 +32,6 @@
                             <input type="text" id="cari_id" name="cari_id" placeholder="Invoice"><br>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="cari_nama">Nama Varian</label>
-                        </div>
-                        <div class="col-75">
-                            <input type="text" id="cari_nama" name="cari_nama" placeholder="Varian"><br>
-                        </div>
-                    </div>
                     <br>
                     <label for="cari_tanggal_awal">Cari Tanggal Barang Masuk</label>
                     <br>
@@ -81,7 +73,7 @@
                         <th scope="col">Invoice</th>
                         <th scope="col">Tanggal Masuk</th>
                         <th scope="col">Nama Varian</th>
-                        <th scope="col">Stok</th>
+                        <th scope="col">Quantity (+)</th>
                         <th scope="col" colspan="2">Action</th>
                     </tr>
                 </thead>
@@ -147,10 +139,18 @@
                 </div>
                 <div class="row">
                     <div class="col-25">
-                        <label for="stok">Total Stok</label>
+                        <label for="stok">Quantity (+)</label>
                     </div>
                     <div class="col-75">
-                        <input type="integer" id="stok" name="stok" placeholder="Total Stok" disabled><br>
+                        <input type="integer" id="stok" name="stok" placeholder="Quantity" disabled><br>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="total_stok">Total Stok</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="integer" id="total_stok" name="total_stok" placeholder="Total Stok" disabled><br>
                     </div>
                 </div>
                 <div class="row">
@@ -196,6 +196,7 @@
                         $('#tanggal_masuk').val(response.tanggal_pembelian)
                         $('#total_harga').val(response.total_harga_beli)
                         $('#stok').val(response.qty)
+                        $('#total_stok').val(response.stok_varian)
                         $('#gudang').val(`${response.id_gudang} - ${response.nama_gudang}`)
                         $('#supplier').val(`${response.id_supplier} - ${response.nama_supplier}`)
                         $('#varian').val(`${response.id_varian} - ${response.nama_varian}`)
