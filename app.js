@@ -26,6 +26,7 @@ var satuanRouter = require('./routes/satuan')(pool)
 var gudangRouter = require('./routes/gudang')(pool)
 var varianRouter = require('./routes/varian')(pool)
 var barangMasukRouter = require('./routes/barang_masuk')(pool)
+var barangKeluarRouter = require('./routes/barang_keluar')(pool)
 
 var app = express();
 
@@ -48,6 +49,8 @@ app.use('/satuan', satuanRouter);
 app.use('/gudang', gudangRouter);
 app.use('/varian', varianRouter);
 app.use('/barang_masuk', barangMasukRouter);
+app.use('/barang_keluar', barangKeluarRouter);
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

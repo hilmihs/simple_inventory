@@ -87,15 +87,15 @@
                             <label for="stok">Stok</label>
                         </div>
                         <div class="col-75">
-                            <input type="number" id="stok" name="stok" placeholder="Stok" value="" ><br>
+                            <input type="number" id="stok" name="stok" placeholder="Stok" value="" readonly><br>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-25">
-                            <label for="tambah_stok">Tambah Stok Masuk</label>
+                            <label for="kurang_stok">Stok Keluar</label>
                         </div>
                         <div class="col-75">
-                            <input type="number" id="tambah_stok" name="tambah_stok" placeholder="Tambah Stok" value=""><br>
+                            <input type="number" id="kurang_stok" name="kurang_stok" placeholder="Stok Keluar" value=""><br>
                         </div>
                     </div>
                     <div class="row">
@@ -119,9 +119,9 @@
                         <button type="submit" class="btn btn-success" style="margin-right: 20px"><i class="bi bi-save"
                                 style="margin-right: 10px;"></i>Submit</button>
                 </form>
-                <a href="/barang_masuk"><button type="button" class="btn btn-info"
+                <a href="/barang_keluar"><button type="button" class="btn btn-info"
                         style="margin-right: 20px; float: right; clear: none;"><i class="bi bi-arrow-up-left-square"
-                            style="margin-right: 10px;"></i>Return to Barang Masuk</button></a>
+                            style="margin-right: 10px;"></i>Return to Barang Keluar</button></a>
             </div>
             </div>
     </main>
@@ -153,8 +153,8 @@
                     
                 })
             })
-            $("#tambah_stok").keyup(function () {
-                    let tambah = $(this).val()
+            $("#kurang_stok").keyup(function () {
+                    let kurang = $(this).val()
                     let display = $("select[name=barang]").val();
                     $.ajax({
                     method: "GET",
@@ -164,9 +164,9 @@
                     .done(function (response) {
                         console.log(response)
                         response.forEach((item) => {
-                        let total = parseInt(tambah) + parseInt(item.stok_varian);
+                        let total = parseInt(item.stok_varian) - parseInt(kurang);
                         $('#total_stok').val(total)
-                        $('#total_harga').val(parseInt(tambah) * parseInt(item.harga_varian))
+                        $('#total_harga').val(parseInt(kurang) * parseInt(item.harga_varian))
                     }).fail(function (err) {
                         alert('err')
                     })
