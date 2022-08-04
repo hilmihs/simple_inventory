@@ -128,6 +128,14 @@
         </div>
         <div class="row">
             <div class="col-25">
+                <label for="harga_jual">Harga Jual</label>
+            </div>
+            <div class="col-75">
+                <input type="text" id="harga_jual" name="harga_jual" placeholder="Harga Jual" disabled><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-25">
                 <label for="satuan">Satuan</label>
             </div>
             <div class="col-75">
@@ -169,6 +177,7 @@
                 $('#barang').val(`${response.id_barang} - ${response.nama_barang}`)
                 $('#stok').val(response.stok_varian)
                 $('#harga').val(response.harga_varian)
+                $('#harga_jual').val(response.harga_jual)
                 $('#satuan').val(`${response.id_satuan} - ${response.nama_satuan}`)
                 $('#gudang').val(`${response.id_gudang} - ${response.nama_gudang}`)
                 $('#gambar').attr("src", `/gambar/${response.gambar_varian}`)

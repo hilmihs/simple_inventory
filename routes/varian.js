@@ -23,6 +23,7 @@ module.exports = function (db) {
     bar.nama_barang,
       var.stok_varian,
       var.harga_varian,
+      var.harga_jual,
       sat.id_satuan,
       sat.nama_satuan,
       gud.id_gudang,
@@ -76,6 +77,7 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang`
     bar.nama_barang,
       var.stok_varian,
       var.harga_varian,
+      var.harga_jual,
       sat.id_satuan,
       sat.nama_satuan,
       gud.id_gudang,
@@ -107,6 +109,7 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang`, (err, rows) => {
     bar.nama_barang,
       var.stok_varian,
       var.harga_varian,
+      var.harga_jual,
       sat.id_satuan,
       sat.nama_satuan,
       gud.id_gudang,
@@ -138,6 +141,7 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE var.id_barang = $1`
     bar.nama_barang,
       var.stok_varian,
       var.harga_varian,
+      var.harga_jual,
       sat.id_satuan,
       sat.nama_satuan,
       gud.id_gudang,
@@ -191,15 +195,15 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE id_varian = $1;`, [
     gambar.mv(uploadPath, function (err) {
       if (err)
         return res.status(500).send(err);
-      const { generate, custom_input, nama, barang, stok, harga, satuan, gudang } = req.body
+      const { generate, custom_input, nama, barang, stok, harga, satuan, gudang, harga_jual } = req.body
       if (generate == 'on') {
         db.query('SELECT * FROM barcode_varian()', (err, rows) => {
           if (err) console.log(err)
           let barcode = rows.rows[0].barcode_varian
           db.query(`INSERT INTO varian(id_varian, nama_varian, id_barang,
                 stok_varian, harga_varian, id_satuan,
-                 id_gudang, gambar_varian) 
-             VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [barcode, nama, barang, stok, harga, satuan, gudang, filename], (err) => {
+                 id_gudang, gambar_varian, harga_jual) 
+             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, [barcode, nama, barang, stok, harga, satuan, gudang, filename, harga_jual], (err) => {
             if (err) {
               return console.error(err.message);
             }
@@ -211,8 +215,8 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE id_varian = $1;`, [
         let barcode = custom_input
         db.query(`INSERT INTO varian(id_varian, nama_varian, id_barang,
         stok_varian, harga_varian, id_satuan,
-         id_gudang, gambar_varian) 
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`, [barcode, nama, barang, stok, harga, satuan, gudang, filename], (err) => {
+         id_gudang, gambar_varian, harga_jual) 
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`, [barcode, nama, barang, stok, harga, satuan, gudang, filename, harga_jual], (err) => {
           if (err) {
             return console.error(err.message);
           }
@@ -240,6 +244,7 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE id_varian = $1;`, [
     bar.nama_barang,
       var.stok_varian,
       var.harga_varian,
+      var.harga_jual,
       sat.id_satuan,
       sat.nama_satuan,
       gud.id_gudang,
@@ -260,7 +265,7 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE id_varian = $1;`, [
   })
 
   router.post('/edit/:id', function (req, res) {
-    const { custom_input, nama, barang, stok, harga, satuan, gudang, saved_gambar } = req.body
+    const { custom_input, nama, barang, stok, harga, satuan, gudang, saved_gambar, harga_jual } = req.body
     let gambar;
     let uploadPath;
     if (!req.files || Object.keys(req.files).length === 0) {
@@ -271,8 +276,9 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE id_varian = $1;`, [
         harga_varian = $4,
          id_satuan = $5,
         id_gudang = $6,
-         gambar_varian = $7
-    WHERE id_varian = $8`, [nama, barang, stok, harga, satuan, gudang, saved_gambar, custom_input], (err) => {
+         gambar_varian = $7,
+         harga_jual = $8
+    WHERE id_varian = $9`, [nama, barang, stok, harga, satuan, gudang, saved_gambar, harga_jual, custom_input], (err) => {
         if (err) {
           return console.error(err.message);
         }
@@ -296,8 +302,9 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE id_varian = $1;`, [
         harga_varian = $4,
          id_satuan = $5,
         id_gudang = $6,
-         gambar_varian = $7
-    WHERE id_varian = $8`, [nama, id_barang, stok, harga, id_satuan, id_gudang, filename, custom_input], (err) => {
+         gambar_varian = $7,
+         harga_jual = $8
+    WHERE id_varian = $9`, [nama, id_barang, stok, harga, id_satuan, id_gudang, filename, harga_jual, custom_input], (err) => {
           if (err) {
             return console.error(err.message);
           }

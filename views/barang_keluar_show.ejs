@@ -21,16 +21,16 @@
 
                 <h2>Add Data</h2>
                 <br>
-                <form action="" method="post" encType="multipart/form-data">
-                    <label><input type="radio" name="generate" id="generate" value="on" /> Auto Generate
-                        Invoice</label><br>
-                    <label><input type="radio" name="generate" id="custom" value="off" checked/> Custom Invoice</label>
-                    <input type="text" name="custom_input" id="custom_input" placeholder="Type Invoice here" style="width: 96%;" disabled>
-                    <label><input type="radio" name="tanggal" id="date_now" value="on" /> Auto Generate Date (Today)</label><br>
-                    <label><input type="radio" name="tanggal" id="date_custom" value="off" />Custom Date</label>
-                    <input type="text" name="custom_date" id="custom_date" placeholder="Choose Date.."
-                    onfocus="(this.type='date')"
-                    onblur="(this.type='text')" style="width: 96%;" disabled>
+                <div class="card" style="padding: 10px;">
+                    <label for="custom_input">Invoice</label>
+                    <input type="text" name="custom_input" id="custom_input" value="<%= penjualan.no_invoice_jual %>"
+                        readonly>
+                    <label for="custom_date">Date</label>
+                    <input type="text" name="custom_date" id="custom_date"
+                        value="<%= moment(penjualan.tanggal_penjualan).format('DD MMMM YYYY') %>" readonly>
+
+                </div>
+                <form id="detail-form" action="" method="post">
                     <div class="row">
                         <div class="col-25">
                             <label for="supplier">Supplier</label>
@@ -38,9 +38,11 @@
                         <div class="col-75">
                             <select class="arrows" name="supplier" id="supplier" value="">
                                 <option disabled selected>Pilih Supplier</option>
-                                <% supplier.forEach((item) => { %>
-                                <option value="<%= item.id_supplier %>"><%= item.id_supplier %> - <%= item.nama_supplier %></option>
-                                <% }) %>
+                                <% supplier.forEach((item)=> { %>
+                                    <option value="<%= item.id_supplier %>">
+                                        <%= item.id_supplier %> - <%= item.nama_supplier %>
+                                    </option>
+                                    <% }) %>
                             </select>
                         </div>
                     </div>
@@ -51,9 +53,11 @@
                         <div class="col-75">
                             <select class="arrows" name="barang" id="barang" value="">
                                 <option disabled selected>Pilih Barang</option>
-                                <% varian.forEach((item) => { %>
-                                <option value="<%= item.id_barang %>"><%= item.id_barang %> - <%= item.nama_varian %></option>
-                                <% }) %>
+                                <% varian.forEach((item)=> { %>
+                                    <option value="<%= item.id_barang %>">
+                                        <%= item.id_barang %> - <%= item.nama_varian %>
+                                    </option>
+                                    <% }) %>
                             </select>
                         </div>
                     </div>
@@ -63,9 +67,9 @@
                         </div>
                         <div class="col-75">
                             <input type="text" id="satuan" name="satuan" placeholder="Satuan" value="" disabled><br>
-                            
+
                         </div>
-                       </div>
+                    </div>
                     <div class="row">
                         <div class="col-25">
                             <label for="gudang">Gudang</label>
@@ -73,29 +77,31 @@
                         <div class="col-75">
                             <input type="text" id="gudang" name="gudang" placeholder="Gudang" value="" readonly><br>
                         </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-25">
+                            <label for="harga_jual">Harga Jual</label>
                         </div>
-                        <div class="row">
-                            <div class="col-25">
-                                <label for="harga">Harga</label>
-                            </div>
-                            <div class="col-75">
-                                <input type="number" step="any" id="harga" name="harga" placeholder="Harga" value="" readonly><br>
-                            </div>
+                        <div class="col-75">
+                            <input type="number" step="any" id="harga_jual" name="harga_jual" placeholder="Harga Jual"
+                                value="" readonly><br>
                         </div>
+                    </div>
                     <div class="row">
                         <div class="col-25">
                             <label for="stok">Stok</label>
                         </div>
                         <div class="col-75">
-                            <input type="number" id="stok" name="stok" placeholder="Stok" value="" ><br>
+                            <input type="number" id="stok" name="stok" placeholder="Stok" value="" readonly><br>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-25">
-                            <label for="tambah_stok">Tambah Stok Masuk</label>
+                            <label for="kurang_stok">Stok Keluar (-)</label>
                         </div>
                         <div class="col-75">
-                            <input type="number" id="tambah_stok" name="tambah_stok" placeholder="Tambah Stok" value=""><br>
+                            <input type="number" id="kurang_stok" name="kurang_stok" placeholder="Stok Keluar"
+                                value=""><br>
                         </div>
                     </div>
                     <div class="row">
@@ -103,23 +109,24 @@
                             <label for="total_stok">Total Stok</label>
                         </div>
                         <div class="col-75">
-                            <input type="number" id="total_stok" name="total_stok" placeholder="Total Stok" value="" readonly><br>
+                            <input type="number" id="total_stok" name="total_stok" placeholder="Total Stok" value=""
+                                readonly><br>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-25">
-                            <label for="total_harga">Total Harga</label>
+                            <label for="total_harga">Total Harga Barang</label>
                         </div>
                         <div class="col-75">
-                            <input type="number" id="total_harga" name="total_harga" placeholder="Total Harga" value="" readonly><br>
+                            <input type="number" id="total_harga" name="total_harga" placeholder="Total Harga" value=""
+                                readonly><br>
                         </div>
                     </div>
                     <div class="container" style="margin-top: 25px;">
 
-                        <button type="submit" class="btn btn-success" style="margin-right: 20px; float: right; clear:none;"><i class="bi bi-save"
-                                style="margin-right: 10px;"></i>Submit</button>
+                        <button type="submit" class="btn btn-success" style="margin-right: 20px"><i class="bi bi-save"
+                                style="margin-right: 10px;"></i>Add Item</button>
                 </form>
-                <br>
                 <table id="detail-table" class="table table-striped">
                     <thead>
                         <tr>
@@ -128,15 +135,25 @@
                             <th>Nama Barang</th>
                             <th>Qty</th>
                             <th>Harga Jual</th>
-                            <th>Total Harga</th>
+                            <th>Total Harga Barang</th>
                         </tr>
                     </thead>
                     <tbody>
                     </tbody>
                 </table>
-                <a href="/barang_masuk"><button type="button" class="btn btn-info"
+                <div class="row">
+                    <div class="col-25">
+                        <label for="total_harga_invoice">Total Harga</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="total_harga_invoice" name="total_harga_invoice" placeholder="Total Harga" value=""
+                            readonly><br>
+                    </div>
+                </div>
+                <br>
+                <a href="/barang_keluar"><button type="button" class="btn btn-info"
                         style="margin-right: 20px; float: right; clear: none;"><i class="bi bi-arrow-up-left-square"
-                            style="margin-right: 10px;"></i>Return to Barang Masuk</button></a>
+                            style="margin-right: 10px;"></i>Return to Barang Keluar</button></a>
             </div>
             </div>
     </main>
@@ -144,34 +161,45 @@
     <%- include('partials/script-footer') %>
 
         <script>
+            let no_invoice = '<%= penjualan.no_invoice_jual %>';
+
             $(function () {
                 $("#barang").change(function () {
                     let display = $("select[name=barang]").val();
                     $.ajax({
-                    method: "GET",
-                    url: `/varian/api`,
-                    dataType: "json"
-                })
-                    .done(function (response) {
-                        response.forEach((item) => {
-                            if (item.id_barang == display) {
-                                $('#satuan').val(item.id_satuan)
-                                $('#gudang').val(item.nama_gudang)
-                                $('#harga').val(item.harga_varian)
-                                $('#stok').val(item.stok_varian)
-                            }
-                        })
-                       
-                    }).fail(function (err) {
-                        alert(`gagal pake jquery, ${err}`)
+                        method: "GET",
+                        url: `/varian/api`,
+                        dataType: "json"
                     })
-                    
+                        .done(function (response) {
+                            response.forEach((item) => {
+                                if (item.id_barang == display) {
+                                    $('#satuan').val(item.id_satuan)
+                                    $('#gudang').val(item.nama_gudang)
+                                    $('#harga_jual').val(item.harga_jual)
+                                    $('#stok').val(item.stok_varian)
+                                }
+                            })
+
+                        }).fail(function (err) {
+                            alert(`gagal pake jquery, ${err}`)
+                        })
+
+                })
+                $('#detail-form').submit(function (e) {
+                    e.preventDefault();
+                    const kode_barang = $('select[name=barang]').val()
+                    const qty = $('#kurang_stok').val()
+                    $.post('/barang_keluar/additem', { no_invoice, kode_barang, qty }).done(function (data) {
+                        readDetails()
+                        $('#total_harga_invoice').val(currencyFormatter.format(data.total_harga))
+                    })
                 })
             })
-            $("#tambah_stok").keyup(function () {
-                    let tambah = $(this).val()
-                    let display = $("select[name=barang]").val();
-                    $.ajax({
+            $("#kurang_stok").keyup(function () {
+                let kurang = $(this).val()
+                let display = $("select[name=barang]").val();
+                $.ajax({
                     method: "GET",
                     url: `/varian/api/${display}`,
                     dataType: "json"
@@ -179,14 +207,46 @@
                     .done(function (response) {
                         console.log(response)
                         response.forEach((item) => {
-                        let total = parseInt(tambah) + parseInt(item.stok_varian);
-                        $('#total_stok').val(total)
-                        $('#total_harga').val(parseInt(tambah) * parseInt(item.harga_varian))
-                    }).fail(function (err) {
-                        alert('err')
+                            let total = parseInt(item.stok_varian) - parseInt(kurang);
+                            $('#total_stok').val(total)
+                            $('#total_harga').val(parseInt(kurang) * parseInt(item.harga_varian))
+                        }).fail(function (err) {
+                            alert('err', err)
+                        })
                     })
+            })
+
+            const readDetails = () => {
+            $.get(`/barang_keluar/details/${no_invoice}`).done(function (data) {
+                let html = ''
+                data.forEach((item, index) => {
+                    html += `
+                    <tr>
+                        <td>
+                            ${index + 1}
+                        </td>
+                        <td>
+                            ${item.id_varian}
+                        </td>
+                        <td>
+                            ${item.nama_barang}
+                        </td>
+                        <td class="right-position">
+                            ${item.qty}
+                        </td>
+                        <td class="right-position">
+                            ${currencyFormatter.format(item.harga_jual)}
+                        </td>
+                        <td class="right-position">
+                            ${currencyFormatter.format(item.total_harga)}
+                        </td>
+                    </tr>
+                    `
                 })
-                })
+                $('#detail-table tbody').html(html)
+            })
+        }
+
             document.getElementsByTagName('input')[0].addEventListener('click', function () {
                 document.getElementById('custom_input').setAttribute('disabled', true);
             });
@@ -202,6 +262,6 @@
             document.getElementsByTagName('input')[4].addEventListener('click', function () {
                 document.getElementById('custom_date').removeAttribute('disabled');
             });
-            
+
         </script>
         <%- include('partials/footer') %>

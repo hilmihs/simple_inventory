@@ -79,7 +79,7 @@ module.exports = function (db) {
       sql_count += `  GROUP BY beli.no_invoice_beli`
       sql_count += ` ORDER BY beli.no_invoice_beli ASC`
     }
-    console.log(sql_count)
+    
     db.query(sql_count, search, (err, data) => {
       if (err) console.log('test count', err)
       const pages = Math.ceil(data.rows[0].total / limit)
@@ -270,7 +270,7 @@ module.exports = function (db) {
     })
   })
   router.post('/edit/:id', function (req, res) {
-    const { custom_input, custom_date, default_input, default_date, id, supplier, barang, tambah_stok, change } = req.body
+    const { custom_input, custom_date, default_input, default_date, id, supplier, barang, tambah_stok, change, stok_old } = req.body
 
     let invoice;
     let date;
@@ -325,10 +325,7 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE bar.id_barang = $1;
           if (custom_input == default_input) {
             invoice = default_input
           }
-          let total = parseInt(tambah_stok) + parseInt(stok_varian)
-          console.log(total, `total`, barang)
-          console.log(total_harga, tambah_stok, harga_varian)
-          console.log(sql_detail, params)
+          let total = parseInt(stok_varian) - parseInt(stok_old) + parseInt(tambah_stok)  
           db.query(sql_detail, params, (err) => {
             if (err) {
               return console.error(err.message, `ini pembelian detail`);
@@ -378,7 +375,7 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE bar.id_barang = $1;
       }
       const barang = rows.rows[0].id_varian
       const result = parseInt(rows.rows[0].stok_varian) - parseInt(rows.rows[0].qty)
-      console.log(result, barang, req.params.id, rows.rows[0])
+    
       db.query('UPDATE varian SET stok_varian = $1 WHERE id_barang = $2', [result, barang], (err, rows) => {
         if (err) {
           return console.error(err.message);

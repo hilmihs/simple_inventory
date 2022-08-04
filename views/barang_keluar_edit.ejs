@@ -82,10 +82,10 @@
                         </div>
                         <div class="row">
                             <div class="col-25">
-                                <label for="harga">Harga</label>
+                                <label for="harga_jual">Harga Jual</label>
                             </div>
                             <div class="col-75">
-                                <input type="number" step="any" id="harga" name="harga" placeholder="Harga" value="<%= isi.harga_varian %>" readonly><br>
+                                <input type="number" step="any" id="harga_jual" name="harga_jual" placeholder="Harga Jual" value="<%= isi.harga_jual %>" readonly><br>
                             </div>
                         </div>
                     <div class="row">
@@ -96,14 +96,15 @@
                             <input type="number" id="stok" name="stok" placeholder="Stok" value="<%= isi.stok_varian %>" readonly><br>
                         </div>
                     </div>
-                    <label><input type="radio" name="change" id="default_qty" value="on" /> Stok Masuk Tetap</label><br>
-                    <label><input type="radio" name="change" id="custom_qty" value="off"/> Ubah Stok Masuk</label>
+                    <label><input type="radio" name="change" id="default_qty" value="on" /> Stok Keluar Tetap</label><br>
+                    <label><input type="radio" name="change" id="custom_qty" value="off"/> Ubah Stok Keluar</label>
                     <div class="row">
                         <div class="col-25">
-                            <label for="kurang_stok" >Tambah Stok Masuk</label>
+                            <label for="kurang_stok" >Stok Keluar</label>
                         </div>
                         <div class="col-75">
                             <input type="number" id="kurang_stok" name="kurang_stok" placeholder="Tambah Stok" value="<%= isi.qty %>" readonly><br>
+                            <input type="hidden" id="stok_old" name="stok_old" value="<%= isi.qty %>">
                         </div>
                     </div>
                     <div class="row">
@@ -151,7 +152,7 @@
                             if (item.id_barang == display) {
                                 $('#satuan').val(item.id_satuan)
                                 $('#gudang').val(item.nama_gudang)
-                                $('#harga').val(item.harga_varian)
+                                $('#harga_jual').val(item.harga_jual)
                                 $('#stok').val(item.stok_varian)
                             }
                         })
@@ -171,9 +172,9 @@
                     dataType: "json"
                 })
                     .done(function (response) {
-                        console.log(response)
                         response.forEach((item) => {
-                        let total = parseInt(item.stok_varian) - parseInt(tambah);
+                        let total = parseInt(item.stok_varian) + parseInt($('#stok_old').val()) - parseInt(tambah);
+                        console.log(total)
                         $('#total_stok').val(total)
                         $('#total_harga').val(parseInt(tambah) * parseInt(item.harga_varian))
                     }).fail(function (err) {

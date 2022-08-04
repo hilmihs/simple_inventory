@@ -104,6 +104,7 @@
                         </div>
                         <div class="col-75">
                             <input type="number" id="tambah_stok" name="tambah_stok" placeholder="Tambah Stok" value="<%= isi.qty %>" readonly><br>
+                            <input type="hidden" id="stok_old" name="stok_old" value="<%= isi.qty %>">
                         </div>
                     </div>
                     <div class="row">
@@ -173,7 +174,7 @@
                     .done(function (response) {
                         console.log(response)
                         response.forEach((item) => {
-                        let total = parseInt(tambah) + parseInt(item.stok_varian);
+                        let total = parseInt(item.stok_varian) - parseInt($('#stok_old').val()) + parseInt(tambah);
                         $('#total_stok').val(total)
                         $('#total_harga').val(parseInt(tambah) * parseInt(item.harga_varian))
                     }).fail(function (err) {
