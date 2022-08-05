@@ -146,7 +146,7 @@
                         <label for="total_harga_invoice">Total Harga</label>
                     </div>
                     <div class="col-75">
-                        <input type="number" id="total_harga_invoice" name="total_harga_invoice" placeholder="Total Harga" value=""
+                        <input type="number" id="total_harga_invoice" name="total_harga_invoice" placeholder="Total Harga" value="<%= penjualan.total_harga_jual %>"
                             readonly><br>
                     </div>
                 </div>
@@ -162,8 +162,9 @@
 
         <script>
             let no_invoice = '<%= penjualan.no_invoice_jual %>';
-
+            let gudang = $('#gudang').val()
             $(function () {
+                readDetails()
                 $("#barang").change(function () {
                     let display = $("select[name=barang]").val();
                     $.ajax({
@@ -192,6 +193,7 @@
                     const qty = $('#kurang_stok').val()
                     $.post('/barang_keluar/additem', { no_invoice, kode_barang, qty }).done(function (data) {
                         readDetails()
+                        console.log(data)
                         $('#total_harga_invoice').val(currencyFormatter.format(data.total_harga))
                     })
                 })
@@ -240,6 +242,7 @@
                         <td class="right-position">
                             ${currencyFormatter.format(item.total_harga)}
                         </td>
+                        
                     </tr>
                     `
                 })

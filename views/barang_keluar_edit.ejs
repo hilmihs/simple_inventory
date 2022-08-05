@@ -21,23 +21,25 @@
 
                 <h2>Edit Data</h2>
                 <br>
-                <form action="" method="post">
-                    <% rows.forEach((isi) => { %>
-                       
-                    <label><input type="radio" name="generate" id="generate" value="on" /> Auto Generate
-                        Invoice</label><br>
-                    <label><input type="radio" name="generate" id="custom" value="off"/> Custom Invoice</label>
-                    <input type="text" name="custom_input" value="<%= isi.no_invoice_jual %>" id="custom_input" placeholder="Type Invoice here" style="width: 96%;" readonly>
-                    
+                <form id="detail-form" action="" method="post">
+                    <div class="card" style="padding: 10px;">
+                    <!-- <label><input type="radio" name="generate" id="generate" value="on" /> Auto Generate
+                        Invoice</label><br> 
+                    <input type="radio" name="generate" id="custom" value="off"/>-->
+                    <label for="custom_input">Invoice</label>
+                    <input type="text" name="custom_input" value="<%= rows.no_invoice_jual %>" id="custom_input" placeholder="Type Invoice here" style="width: 96%;" readonly>
+                    <label for="custom_date">Date</label> 
+<!--                    
                     <label><input type="radio" name="tanggal" id="date_now" value="on" /> Auto Generate Date (Today)</label><br>
-                    <label><input type="radio" name="tanggal" id="date_custom" value="off"/>Custom Date</label>
-                    <input type="text" name="custom_date" id="custom_date" value="<%= isi.tanggal_penjualan %>" placeholder="Choose Date.." readonly
+                    <label><input type="radio" name="tanggal" id="date_custom" value="off"/>Edit Date</label> -->
+                    <input type="text" name="custom_date" id="custom_date" value="<%= moment(rows.tanggal_penjualan).format('DD MMMM YYYY') %>" placeholder="Choose Date.." readonly
                     onfocus="(this.type='date')"
                     onblur="(this.type='text')" style="width: 96%;" >
-                    <input type="hidden" name="id" id="id" value="<%= isi.id_transaksi_jual %>">
-                    <input type="hidden" name="default_input" id="default_input" value="<%= isi.no_invoice_jual %>">
-                    <input type="hidden" name="default_date" id="default_date" value="<%= isi.tanggal_penjualan %>">
-                    <div class="row">
+                    <input type="hidden" name="id" id="id" value="<%= rows.id_transaksi_jual %>">
+                    <input type="hidden" name="default_input" id="default_input" value="<%= rows.no_invoice_jual %>">
+                    <input type="hidden" name="default_date" id="default_date" value="<%= moment(rows.tanggal_penjualan).format('DD MMMM YYYY') %>">
+                    </div>
+                    <!-- <div class="row">
                         <div class="col-25">
                             <label for="supplier">Supplier</label>
                         </div>
@@ -45,7 +47,7 @@
                             <select class="arrows" name="supplier" id="supplier" value="">
                                 <option readonly selected>Pilih Supplier</option>
                                 <% supplier.forEach((item) => { %>
-                                <option value="<%= item.id_supplier %>" <%= isi.id_supplier == item.id_supplier ? 'selected' : '' %>><%= item.id_supplier %> - <%= item.nama_supplier %></option>
+                                <option value="<%= item.id_supplier %>" <%= rows.id_supplier == item.id_supplier ? 'selected' : '' %>><%= item.id_supplier %> - <%= item.nama_supplier %></option>
                                 <% }) %>
                             </select>
                         </div>
@@ -58,7 +60,7 @@
                             <select class="arrows" name="barang" id="barang" value="">
                                 <option disabled selected>Pilih Barang</option>
                                 <% varian.forEach((item) => { %>
-                                <option value="<%= item.id_barang %>" <%= isi.id_varian == item.id_barang ? 'selected' : '' %>><%= item.id_barang %> - <%= item.nama_varian %></option>
+                                <option value="<%= item.id_barang %>" <%= rows.id_varian == item.id_barang ? 'selected' : '' %>><%= item.id_barang %> - <%= item.nama_varian %></option>
                                 <% }) %>
                             </select>
                         </div>
@@ -68,7 +70,7 @@
                             <label for="satuan">Satuan</label>
                         </div>
                         <div class="col-75">
-                            <input type="text" id="satuan" name="satuan" placeholder="Satuan" value="<%= isi.nama_satuan %>" readonly><br>
+                            <input type="text" id="satuan" name="satuan" placeholder="Satuan" value="<%= rows.nama_satuan %>" readonly><br>
                             
                         </div>
                        </div>
@@ -77,7 +79,7 @@
                             <label for="gudang">Gudang</label>
                         </div>
                         <div class="col-75">
-                            <input type="text" id="gudang" name="gudang" placeholder="Gudang" value="<%= isi.nama_gudang %>" readonly><br>
+                            <input type="text" id="gudang" name="gudang" placeholder="Gudang" value="<%= rows.nama_gudang %>" readonly><br>
                         </div>
                         </div>
                         <div class="row">
@@ -85,7 +87,7 @@
                                 <label for="harga_jual">Harga Jual</label>
                             </div>
                             <div class="col-75">
-                                <input type="number" step="any" id="harga_jual" name="harga_jual" placeholder="Harga Jual" value="<%= isi.harga_jual %>" readonly><br>
+                                <input type="number" step="any" id="harga_jual" name="harga_jual" placeholder="Harga Jual" value="<%= rows.harga_jual %>" readonly><br>
                             </div>
                         </div>
                     <div class="row">
@@ -93,7 +95,7 @@
                             <label for="stok">Stok</label>
                         </div>
                         <div class="col-75">
-                            <input type="number" id="stok" name="stok" placeholder="Stok" value="<%= isi.stok_varian %>" readonly><br>
+                            <input type="number" id="stok" name="stok" placeholder="Stok" value="<%= rows.stok_varian %>" readonly><br>
                         </div>
                     </div>
                     <label><input type="radio" name="change" id="default_qty" value="on" /> Stok Keluar Tetap</label><br>
@@ -103,8 +105,8 @@
                             <label for="kurang_stok" >Stok Keluar</label>
                         </div>
                         <div class="col-75">
-                            <input type="number" id="kurang_stok" name="kurang_stok" placeholder="Tambah Stok" value="<%= isi.qty %>" readonly><br>
-                            <input type="hidden" id="stok_old" name="stok_old" value="<%= isi.qty %>">
+                            <input type="number" id="kurang_stok" name="kurang_stok" placeholder="Tambah Stok" value="<%= rows.qty %>" readonly><br>
+                            <input type="hidden" id="stok_old" name="stok_old" value="<%= rows.qty %>">
                         </div>
                     </div>
                     <div class="row">
@@ -112,7 +114,7 @@
                             <label for="total_stok">Total Stok</label>
                         </div>
                         <div class="col-75">
-                            <input type="number" id="total_stok" name="total_stok" placeholder="Total Stok" value="<%= isi.stok_varian %>" readonly><br>
+                            <input type="number" id="total_stok" name="total_stok" placeholder="Total Stok" value="<%= rows.stok_varian %>" readonly><br>
                         </div>
                     </div>
                     <div class="row">
@@ -120,27 +122,153 @@
                             <label for="total_harga">Total Harga</label>
                         </div>
                         <div class="col-75">
-                            <input type="number" id="total_harga" name="total_harga" placeholder="Total Harga" value="<%= isi.total_harga_jual %>" readonly><br>
+                            <input type="number" id="total_harga" name="total_harga" placeholder="Total Harga" value="<%= rows.total_harga_jual %>" readonly><br>
                         </div>
-                    </div>
-                    <% }) %>
-                    <div class="container" style="margin-top: 25px;">
+                    </div> -->
+                    
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="supplier">Supplier</label>
+                            </div>
+                            <div class="col-75">
+                                <select class="arrows" name="supplier" id="supplier" value="">
+                                    <option disabled selected>Pilih Supplier</option>
+                                    <% supplier.forEach((item)=> { %>
+                                        <option value="<%= item.id_supplier %>">
+                                            <%= item.id_supplier %> - <%= item.nama_supplier %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="barang">Barang</label>
+                            </div>
+                            <div class="col-75">
+                                <select class="arrows" name="barang" id="barang" value="">
+                                    <option disabled selected>Pilih Barang</option>
+                                    <% varian.forEach((item)=> { %>
+                                        <option value="<%= item.id_barang %>">
+                                            <%= item.id_barang %> - <%= item.nama_varian %>
+                                        </option>
+                                        <% }) %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="satuan">Satuan</label>
+                            </div>
+                            <div class="col-75">
+                                <input type="text" id="satuan" name="satuan" placeholder="Satuan" value="" disabled><br>
+    
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="gudang">Gudang</label>
+                            </div>
+                            <div class="col-75">
+                                <input type="text" id="gudang" name="gudang" placeholder="Gudang" value="" readonly><br>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="harga_jual">Harga Jual</label>
+                            </div>
+                            <div class="col-75">
+                                <input type="number" step="any" id="harga_jual" name="harga_jual" placeholder="Harga Jual"
+                                    value="" readonly><br>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="stok">Stok</label>
+                            </div>
+                            <div class="col-75">
+                                <input type="number" id="stok" name="stok" placeholder="Stok" value="" readonly><br>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="kurang_stok">Stok Keluar (-)</label>
+                            </div>
+                            <div class="col-75">
+                                <input type="number" id="kurang_stok" name="kurang_stok" placeholder="Stok Keluar" value=""><br>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="total_stok">Total Stok</label>
+                            </div>
+                            <div class="col-75">
+                                <input type="number" id="total_stok" name="total_stok" placeholder="Total Stok" value=""
+                                    readonly><br>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="total_harga">Total Harga Barang</label>
+                            </div>
+                            <div class="col-75">
+                                <input type="number" id="total_harga" name="total_harga" placeholder="Total Harga" value=""
+                                    readonly><br>
+                            </div>
+                        </div>
+                        <div class="container" style="margin-top: 25px;">
 
-                        <button type="submit" class="btn btn-success" style="margin-right: 20px"><i class="bi bi-save"
-                                style="margin-right: 10px;"></i>Submit</button>
+                            <button type="submit" class="btn btn-success" style="margin-right: 20px"><i class="bi bi-save"
+                                    style="margin-right: 10px;"></i>Submit Edit</button>
+                  
+                    <div class="container" style="margin-top: 25px;">
+                        <div class="card">
+                        <table id="detail-table" class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Kode Barang</th>
+                                    <th>Nama Barang</th>
+                                    <th>Qty</th>
+                                    <th>Harga Jual</th>
+                                    <th>Total Harga Barang</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br>
+                        
                 </form>
+                <div class="row">
+                    <div class="col-25">
+                        <label for="total_harga_invoice">Total Harga</label>
+                    </div>
+                    <div class="col-75">
+                        <input type="number" id="total_harga_invoice" name="total_harga_invoice" placeholder="Total Harga" value="<%= rows.total_harga_jual %>"
+                            readonly><br>
+                    </div>
+                </div>
+                <br>
                 <a href="/barang_keluar"><button type="button" class="btn btn-info"
                         style="margin-right: 20px; float: right; clear: none;"><i class="bi bi-arrow-up-left-square"
                             style="margin-right: 10px;"></i>Return to Barang Keluar</button></a>
             </div>
             </div>
+            <input type="hidden" id="detail" name="detail" value="">
+
+            
     </main>
-
     <%- include('partials/script-footer') %>
-
         <script>
+            let no_invoice = '<%= rows.no_invoice_jual %>'
+            let id_detail = '<%= rows.id_detail %>'
+            console.log($('#detail').val())
             $(function () {
-                $("#barang").change(function () {
+                readDetails()
+                $("#barang").on('propertychange input',function () {
                     let display = $("select[name=barang]").val();
                     $.ajax({
                     method: "GET",
@@ -162,8 +290,19 @@
                     })
                     
                 })
+                $('#detail-form').submit(function (e) {
+                    e.preventDefault();
+                    const kode_barang = $('select[name=barang]').val()
+                    const qty = $('#kurang_stok').val()
+                    const id_detail = $('#detail').val()
+                    $.post('/barang_keluar/edititem', { id_detail, kode_barang, qty }).done(function (data) {
+                        readDetails()
+                        console.log(data)
+                        $('#total_harga_invoice').val(data.total_harga_jual)
+                    })
+                })
             })
-            $("#kurang_stok").keyup(function () {
+            $("#kurang_stok").on('propertychange input',function () {
                     let tambah = $(this).val()
                     let display = $("select[name=barang]").val();
                     $.ajax({
@@ -173,15 +312,15 @@
                 })
                     .done(function (response) {
                         response.forEach((item) => {
-                        let total = parseInt(item.stok_varian) + parseInt($('#stok_old').val()) - parseInt(tambah);
-                        console.log(total)
+                        let total = parseInt(item.stok_varian) - parseInt(tambah);
                         $('#total_stok').val(total)
-                        $('#total_harga').val(parseInt(tambah) * parseInt(item.harga_varian))
+                        $('#total_harga').val(parseInt(tambah) * parseInt(item.harga_jual))
                     }).fail(function (err) {
                         alert('err')
                     })
                 })
                 })
+           
             document.getElementsByTagName('input')[0].addEventListener('click', function () {
                 document.getElementById('custom_input').setAttribute('readonly', true);
             });
@@ -197,12 +336,68 @@
             document.getElementsByTagName('input')[4].addEventListener('click', function () {
                 document.getElementById('custom_date').removeAttribute('readonly');
             });
-            document.getElementsByTagName('input')[13].addEventListener('click', function () {
-                document.getElementById('kurang_stok').setAttribute('readonly', true);
-            });
+            const readDetails = () => {
+            $.get(`/barang_keluar/details/${no_invoice}`).done(function (data) {
+                let html = ''
+                data.forEach((item, index) => {
+                    html += `
+                    <tr>
+                        <td>
+                            ${index + 1}
+                        </td>
+                        <td>
+                            ${item.id_varian}
+                        </td>
+                        <td>
+                            ${item.nama_barang}
+                        </td>
+                        <td class="right-position">
+                            ${item.qty}
+                        </td>
+                        <td class="right-position">
+                            ${currencyFormatter.format(item.harga_jual)}
+                        </td>
+                        <td class="right-position">
+                            ${currencyFormatter.format(item.total_harga)}
+                        </td>
+                        <td>
+                        <button type="button" onclick="infoData('${item.id_detail}')" class="btn btn-info btn-sm" style="margin-right: 15px;">
+                            <i class="bi bi-pencil-square" style="margin-right: 10px;"></i>Edit</button>
+                                        </td>
+                    </tr>
+                    `
+                })
+                $('#detail-table tbody').html(html)
+            })
+            
+        }
+        const infoData = (id) => {
+                $.ajax({
+                    method: "GET",
+                    url: `/barang_keluar/edit_detail/${id}`,
+                    dataType: "json"
+                })
+                    .done(function (response) {
+                       
+                        $('#supplier').val(response.id_supplier)
+                        $('#satuan').val(response.nama_satuan)
+                        $('#gudang').val(response.nama_gudang)
+                        $('#harga_jual').val(response.harga_jual)
+                        $('#stok').val(response.stok_varian)
+                        $('#total_stok').val(response.stok_varian - response.qty)
+                        $('#total_harga').val(response.total_harga_jual)
+                        $('#barang').val(response.id_barang)
+                        $('#kurang_stok').val(response.qty)
+                        $('#detail').val(response.id_detail)
+                      
+                    }).fail(function (err) {
+                        alert(`gagal pake jquery, ${err}`)
+                    })
 
-            document.getElementsByTagName('input')[14].addEventListener('click', function () {
-                document.getElementById('kurang_stok').removeAttribute('readonly');
-            });
+                $(document).ready(function () {
+
+                })
+            }
         </script>
+        
         <%- include('partials/footer') %>

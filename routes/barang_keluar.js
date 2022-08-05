@@ -4,6 +4,7 @@ var moment = require('moment');
 var path = require('path');
 var moment = require('moment');
 const e = require('express');
+const { currencyFormatter } = require('../helpers/util')
 
 module.exports = function (db) {
 
@@ -12,32 +13,13 @@ module.exports = function (db) {
     const limit = 3
     const offset = (page - 1) * limit
 
-
     const { cari_id, cari_nama, cari_tanggal_awal, cari_tanggal_akhir } = req.query
     let search = []
     let count = 1
     let syntax = []
     let sql_count = `SELECT count(jual.no_invoice_jual) AS total 
     FROM penjualan jual`
-    let sql = `SELECT jual.no_invoice_jual,
-    jual.tanggal_penjualan,
-    jual.total_harga_jual,
-    jual.id_transaksi_jual,
-    gud.id_gudang,
-    gud.nama_gudang,
-    sup.id_supplier,
-    sup.nama_supplier,
-    pdetail.id_detail,
-    pdetail.qty,
-    pdetail.id_varian,
-    var.nama_varian,
-    var.stok_varian
-    FROM penjualan jual
-    INNER JOIN gudang gud ON gud.id_gudang = jual.id_gudang
-    INNER JOIN supplier sup ON sup.id_supplier = jual.id_supplier
-    INNER JOIN penjualan_detail pdetail ON pdetail.id_detail = jual.id_transaksi_jual 
-    INNER JOIN varian var ON pdetail.id_varian = var.id_barang`
-
+    let sql = `SELECT * FROM penjualan jual`
     if (cari_id) {
       sql += ' WHERE '
       sql_count += ' WHERE '
@@ -84,8 +66,9 @@ module.exports = function (db) {
       if (err) console.log('test count', err)
       const pages = Math.ceil(data.rows[0].total / limit)
       db.query(sql, search, (err, rows) => {
+        console.log(sql)
         if (err) console.log('test sql', err)
-        res.render('barang_keluar', { rows: rows.rows, currentDir: 'barang_keluar', current: '', pages, page, moment });
+        res.render('barang_keluar', { rows: rows.rows, currentDir: 'barang_keluar', current: '', pages, page, moment, currencyFormatter });
       })
     })
   })
@@ -227,7 +210,7 @@ module.exports = function (db) {
               const gudang = rowsG.rows
               const varian = rowsV.rows
               const supplier = rowsSup.rows
-              res.render('barang_keluar_show', { currentDir: 'barang_keluar', current: '', penjualan, satuan, gudang, varian, supplier, moment });
+              res.render('barang_keluar_show', { currentDir: 'barang_keluar', current: '', penjualan, satuan, gudang, varian, supplier, moment, currencyFormatter });
             })
           })
         })
@@ -247,15 +230,42 @@ module.exports = function (db) {
     })
   })
 
+  router.post('/edititem', (req, res) => {
+    const { id_detail, kode_barang, qty } = req.body
+    db.query(`UPDATE penjualan_detail SET id_varian = $1, qty = $2 
+    WHERE id_detail = $3 RETURNING *`, [kode_barang, qty, id_detail], (err, rows) => {
+      if (err) console.log(err)
+      const no_invoice_jual = rows.rows[0].no_invoice
+      db.query(`SELECT * FROM penjualan WHERE no_invoice_jual = $1`, [no_invoice_jual], (err, rows) => {
+        if (err) console.log(err)
+        res.json(rows.rows[0])
+      })
+    })
+  })
+
   router.get('/details/:no_invoice', (req, res) => {
-db.query(`SELECT dp.*, b.nama_barang FROM penjualan_detail as dp 
-        LEFT JOIN barang as b ON dp.id_varian = b.id_barang WHERE dp.no_invoice = $1 
-        ORDER BY dp.id_detail`, [req.params.no_invoice], (err, rows) => {
+db.query(`SELECT dp.*, b.nama_barang, p.* FROM penjualan_detail as dp 
+LEFT JOIN barang as b ON dp.id_varian = b.id_barang
+LEFT JOIN penjualan as p ON dp.no_invoice= p.no_invoice_jual WHERE dp.no_invoice = $1
+ORDER BY dp.id_detail;`, [req.params.no_invoice], (err, rows) => {
           if (err) console.log(err)
           res.json(rows.rows)
         })
         
 })
+router.get('/edit_detail/:id_detail', (req, res) => {
+  db.query(`SELECT dp.*, b.*, v.*, p.*, g.*, s.* FROM penjualan_detail as dp 
+  LEFT JOIN barang as b ON dp.id_varian = b.id_barang
+  LEFT JOIN varian as v ON b.id_barang = v.id_barang
+  LEFT JOIN penjualan as p ON dp.no_invoice = p.no_invoice_jual
+  LEFT JOIN satuan as s ON v.id_satuan = s.id_satuan
+  LEFT JOIN gudang as g ON g.id_gudang = p.id_gudang WHERE dp.id_detail = $1
+  ORDER BY dp.id_detail;`, [req.params.id_detail], (err, rows) => {
+            if (err) console.log(err)
+            res.json(rows.rows[0])
+          })
+          
+  })
 
   router.get('/edit/:id', (req, res) => {
     db.query('SELECT * FROM satuan', (err, rowsS) => {
@@ -270,34 +280,24 @@ db.query(`SELECT dp.*, b.nama_barang FROM penjualan_detail as dp
             const gudang = rowsG.rows
             const varian = rowsV.rows
             const supplier = rowsSup.rows
-            db.query(`SELECT jual.no_invoice_jual,
-    jual.tanggal_penjualan,
-    jual.total_harga_jual,
-    jual.id_transaksi_jual,
-    jual.total_harga_jual,
-    gud.id_gudang,
-    gud.nama_gudang,
-    sup.id_supplier,
-    sup.nama_supplier,
-    pdetail.id_detail,
-    pdetail.qty,
-    pdetail.id_varian,
-    var.nama_varian,
-    var.id_satuan,
-    var.harga_varian,
-    var.stok_varian,
-    sat.nama_satuan
-    FROM penjualan jual
-    INNER JOIN gudang gud ON gud.id_gudang = jual.id_gudang
-    INNER JOIN supplier sup ON sup.id_supplier = jual.id_supplier
-    INNER JOIN penjualan_detail pdetail ON pdetail.id_detail = jual.id_transaksi_jual 
-    INNER JOIN varian var ON pdetail.id_varian = var.id_barang 
-    INNER JOIN satuan sat ON var.id_satuan = sat.id_satuan 
-    WHERE jual.id_transaksi_jual = $1`, [req.params.id], (err, rows_beli) => {
+            db.query(`SELECT jual.*,
+            gud.*,
+            sup.*,
+            pdetail.*,
+            var.*,
+            sat.*
+            FROM penjualan jual
+            INNER JOIN gudang gud ON gud.id_gudang = jual.id_gudang
+            INNER JOIN supplier sup ON sup.id_supplier = jual.id_supplier
+            INNER JOIN penjualan_detail pdetail ON pdetail.no_invoice = jual.no_invoice_jual 
+            INNER JOIN varian var ON pdetail.id_varian = var.id_barang 
+            INNER JOIN satuan sat ON var.id_satuan = sat.id_satuan 
+            WHERE jual.no_invoice_jual = $1`, [req.params.id], (err, rows_beli) => {
               if (err) {
                 return console.error(err.message);
               }
-              res.render('barang_keluar_edit', { rows: rows_beli.rows, currentDir: 'penjualan', current: '', satuan, gudang, varian, supplier });
+              console.log(rows_beli.rows[0])
+              res.render('barang_keluar_edit', { rows: rows_beli.rows[0], currentDir: 'barang_keluar', current: '', satuan, gudang, varian, supplier, moment });
             })
           })
         })
@@ -378,64 +378,20 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE bar.id_barang = $1;
     id_supplier = $5 WHERE id_transaksi_jual = $6`, [invoice, date, total_harga, id_gudang, supplier, id], (err) => {
               if (err) {
                 return console.error(err.message, `ini penjualan`);
-              }
-              
-             
-              
-                if (change != 'on') {
-              db.query(`UPDATE varian SET stok_varian = $1 WHERE id_barang = $2`, [total, barang], (err) => {
-                if (err) {
-                  return console.error(err.message);
-                }
-                res.redirect('/barang_keluar')
-              })
-            } else {
+              }      
               res.redirect('/barang_keluar')
-            }
             })
           })
         })
       
   })
   router.get('/delete/:id', (req, res) => {
-    db.query(`SELECT jual.no_invoice_jual,
-    jual.id_transaksi_jual,
-    jual.total_harga_jual,
-    pdetail.id_detail,
-    pdetail.qty,
-    pdetail.id_varian,
-    var.nama_varian,
-    var.id_satuan,
-    var.harga_varian,
-    var.stok_varian
-    FROM penjualan jual
-    INNER JOIN penjualan_detail pdetail ON pdetail.id_detail = jual.id_transaksi_jual 
-    INNER JOIN varian var ON pdetail.id_varian = var.id_barang 
-    WHERE id_transaksi_jual = $1`, [req.params.id], (err, rows) => {
-      if (err) {
-        return console.error(err.message);
-      }
-      const barang = rows.rows[0].id_varian
-      const result = parseInt(rows.rows[0].stok_varian) - parseInt(rows.rows[0].qty)
-      console.log(result, barang, req.params.id, rows.rows[0])
-      db.query('UPDATE varian SET stok_varian = $1 WHERE id_barang = $2', [result, barang], (err, rows) => {
-        if (err) {
-          return console.error(err.message);
-        }
-        db.query('DELETE FROM penjualan WHERE id_transaksi_jual = $1', [req.params.id], (err) => {
+        db.query('DELETE FROM penjualan WHERE no_invoice_jual = $1', [req.params.id], (err) => {
           if (err) {
             return console.error(err.message);
           }
-          db.query('DELETE FROM penjualan_detail WHERE id_detail = $1', [req.params.id], (err) => {
-            if (err) {
-              return console.error(err.message);
-            }
-
             res.redirect('/barang_keluar')
           })
         })
-      })
-    })
-  })
   return router;
 }
