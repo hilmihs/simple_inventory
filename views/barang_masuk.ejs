@@ -72,8 +72,7 @@
                     <tr>
                         <th scope="col">Invoice</th>
                         <th scope="col">Tanggal Masuk</th>
-                        <th scope="col">Nama Varian</th>
-                        <th scope="col">Quantity (+)</th>
+                        <th scope="col">Total Harga</th>
                         <th scope="col" colspan="2">Action</th>
                     </tr>
                 </thead>
@@ -81,7 +80,7 @@
                     <% rows.forEach((item)=> { %>
                         <tr>
                             <th scope="row">
-                                <%= item.no_invoice_beli %>
+                                <a href="/barang_masuk/show/<%= item.no_invoice_beli %>"><%= item.no_invoice_beli %></a>
                             </th>
                             <td>
                                 <%= item.tanggal_pembelian ? moment(item.tanggal_pembelian).format('DD MMMM YYYY')
@@ -91,7 +90,7 @@
                                 <%= item.nama_varian %>
                             </td>
                             <td>
-                                <%= item.qty %>
+                                <%= currencyFormatter.format(item.total_harga_beli) %>
                             </td>
                             <td>
                                 <a href="/barang_masuk/delete/<%=  item.id_transaksi_beli %>"><button type="button"
@@ -109,75 +108,7 @@
                         <% }) %>
                 </tbody>
             </table>
-            <h2>Detail Barang Masuk</h2>
-            <form action="" method="get">
-                <div class="row">
-                    <div class="col-25">
-                        <label for="kode">Invoice</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="id" name="id" placeholder="ID" disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="tanggal_masuk">Tanggal Barang Masuk</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="tanggal_masuk" name="tanggal_masuk" placeholder="Tanggal Masuk"
-                            disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="total_harga">Total Harga</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="integer" id="total_harga" name="total_harga" placeholder="Total Harga"
-                            disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="stok">Quantity (+)</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="integer" id="stok" name="stok" placeholder="Quantity" disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="total_stok">Total Stok</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="integer" id="total_stok" name="total_stok" placeholder="Total Stok" disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="gudang">Gudang</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="gudang" name="gudang" placeholder="Gudang" disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="supplier">Supplier</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="supplier" name="supplier" placeholder="Supplier" disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="varian">Varian</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="varian" name="varian" placeholder="Varian" disabled><br>
-                    </div>
-                </div>
-
+    
                 </div>
     </main>
 

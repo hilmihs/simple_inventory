@@ -82,7 +82,7 @@
                                     : 'kosong' %>
                             </td>
                             <td>
-                                <%= item.total_harga_jual %>
+                                <%= currencyFormatter.format(item.total_harga_jual) %>
                             </td>
                             
                             <td>
@@ -93,82 +93,11 @@
                                         class="btn btn-info btn-sm" style="margin-right: 15px;"><i
                                             class="bi bi-pencil-square"
                                             style="margin-right: 10px;"></i>Edit</button></a>
-                                <button type="button" class="btn btn-info btn-sm btn-edit"
-                                    onclick="infoData('<%= item.no_invoice_jual %>')" style="margin-right: 15px;"><i
-                                        class="bi bi-info-circle" style="margin-right: 10px;"></i>Info Detail</button>
                             </td>
                         </tr>
                         <% }) %>
                 </tbody>
             </table>
-            <h2>Detail Barang Jual</h2>
-            <form action="" method="get">
-                <div class="row">
-                    <div class="col-25">
-                        <label for="kode">Invoice</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="id" name="id" placeholder="ID" disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="tanggal_masuk">Tanggal Barang Keluar</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="tanggal_masuk" name="tanggal_masuk" placeholder="Tanggal Keluar"
-                            disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="total_harga">Total Harga Keluar</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="integer" id="total_harga" name="total_harga" placeholder="Total Harga"
-                            disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="stok">Quantity (-)</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="integer" id="stok" name="stok" placeholder="Quantity" disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="total_stok">Total Stok Tersisa</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="integer" id="total_stok" name="total_stok" placeholder="Total Stok" disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="gudang">Gudang</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="gudang" name="gudang" placeholder="Gudang" disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="supplier">Supplier</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="supplier" name="supplier" placeholder="Supplier" disabled><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="varian">Varian</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="varian" name="varian" placeholder="Varian" disabled><br>
-                    </div>
-                </div>
 
                 </div>
     </main>

@@ -265,6 +265,7 @@
         <script>
             let no_invoice = '<%= rows.no_invoice_jual %>'
             let id_detail = '<%= rows.id_detail %>'
+            let qty = '<%= rows.qty %>'
             console.log($('#detail').val())
             $(function () {
                 readDetails()
@@ -312,7 +313,7 @@
                 })
                     .done(function (response) {
                         response.forEach((item) => {
-                        let total = parseInt(item.stok_varian) - parseInt(tambah);
+                        let total = parseInt(item.stok_varian) + parseInt(qty) - parseInt(tambah);
                         $('#total_stok').val(total)
                         $('#total_harga').val(parseInt(tambah) * parseInt(item.harga_jual))
                     }).fail(function (err) {

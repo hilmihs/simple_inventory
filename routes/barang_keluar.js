@@ -61,12 +61,11 @@ module.exports = function (db) {
       sql_count += `  GROUP BY jual.no_invoice_jual`
       sql_count += ` ORDER BY jual.no_invoice_jual ASC`
     }
-    console.log(sql_count)
+
     db.query(sql_count, search, (err, data) => {
       if (err) console.log('test count', err)
       const pages = Math.ceil(data.rows[0].total / limit)
       db.query(sql, search, (err, rows) => {
-        console.log(sql)
         if (err) console.log('test sql', err)
         res.render('barang_keluar', { rows: rows.rows, currentDir: 'barang_keluar', current: '', pages, page, moment, currencyFormatter });
       })
@@ -250,9 +249,9 @@ LEFT JOIN penjualan as p ON dp.no_invoice= p.no_invoice_jual WHERE dp.no_invoice
 ORDER BY dp.id_detail;`, [req.params.no_invoice], (err, rows) => {
           if (err) console.log(err)
           res.json(rows.rows)
-        })
-        
+        }) 
 })
+
 router.get('/edit_detail/:id_detail', (req, res) => {
   db.query(`SELECT dp.*, b.*, v.*, p.*, g.*, s.* FROM penjualan_detail as dp 
   LEFT JOIN barang as b ON dp.id_varian = b.id_barang
