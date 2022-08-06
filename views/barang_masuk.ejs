@@ -87,22 +87,16 @@
                                     : 'kosong' %>
                             </td>
                             <td>
-                                <%= item.nama_varian %>
-                            </td>
-                            <td>
                                 <%= currencyFormatter.format(item.total_harga_beli) %>
                             </td>
                             <td>
-                                <a href="/barang_masuk/delete/<%=  item.id_transaksi_beli %>"><button type="button"
+                                <a href="/barang_masuk/delete/<%=  item.no_invoice_beli %>"><button type="button"
                                         class="btn btn-info btn-sm" style="margin-right: 15px;"><i class="bi bi-trash3"
                                             style="margin-right: 10px;"></i>Delete</button></a>
-                                <a href="/barang_masuk/edit/<%=  item.id_transaksi_beli %>"><button type="button"
+                                <a href="/barang_masuk/edit/<%=  item.no_invoice_beli %>"><button type="button"
                                         class="btn btn-info btn-sm" style="margin-right: 15px;"><i
                                             class="bi bi-pencil-square"
                                             style="margin-right: 10px;"></i>Edit</button></a>
-                                <button type="button" class="btn btn-info btn-sm btn-edit"
-                                    onclick="infoData('<%= item.no_invoice_beli %>')" style="margin-right: 15px;"><i
-                                        class="bi bi-info-circle" style="margin-right: 10px;"></i>Info Detail</button>
                             </td>
                         </tr>
                         <% }) %>

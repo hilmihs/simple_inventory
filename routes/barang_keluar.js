@@ -279,19 +279,10 @@ router.get('/edit_detail/:id_detail', (req, res) => {
             const gudang = rowsG.rows
             const varian = rowsV.rows
             const supplier = rowsSup.rows
-            db.query(`SELECT jual.*,
-            gud.*,
-            sup.*,
-            pdetail.*,
-            var.*,
-            sat.*
+            db.query(`SELECT jual.*, pdetail.*
             FROM penjualan jual
-            INNER JOIN gudang gud ON gud.id_gudang = jual.id_gudang
-            INNER JOIN supplier sup ON sup.id_supplier = jual.id_supplier
             INNER JOIN penjualan_detail pdetail ON pdetail.no_invoice = jual.no_invoice_jual 
-            INNER JOIN varian var ON pdetail.id_varian = var.id_barang 
-            INNER JOIN satuan sat ON var.id_satuan = sat.id_satuan 
-            WHERE jual.no_invoice_jual = $1`, [req.params.id], (err, rows_beli) => {
+            WHERE jual.no_invoice_jual = $1;`, [req.params.id], (err, rows_beli) => {
               if (err) {
                 return console.error(err.message);
               }

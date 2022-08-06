@@ -69,7 +69,7 @@ module.exports = function (db) {
       const pages = Math.ceil(data.rows[0].total / limit)
       db.query(sql, search, (err, rows) => {
         if (err) console.log('test sql', err)
-        res.render('barang_masuk', { rows: rows.rows, currentDir: 'barang_masuk', current: '', pages, page, moment });
+        res.render('barang_masuk', { rows: rows.rows, currentDir: 'barang_masuk', current: '', pages, page, moment, currencyFormatter });
       })
     })
   })
@@ -230,7 +230,7 @@ module.exports = function (db) {
     VALUES ($1, $2, $3)`, [no_invoice, kode_barang, qty], (err) => {
       if (err) console.log(err)
       db.query(`SELECT * FROM pembelian WHERE no_invoice_beli = $1`, [no_invoice], (err, rows) => {
-        if (err) console.log(err)
+        if (err) console.log(err, `ini error di select`)
         res.json(rows.rows[0])
       })
     })
@@ -255,6 +255,7 @@ module.exports = function (db) {
     LEFT JOIN pembelian as p ON db.no_invoice= p.no_invoice_beli WHERE db.no_invoice = $1
     ORDER BY db.id_detail;`, [req.params.no_invoice], (err, rows) => {
               if (err) console.log(err)
+              console.log(rows.rows)
               res.json(rows.rows)
             }) 
     })
@@ -287,17 +288,9 @@ module.exports = function (db) {
             const varian = rowsV.rows
             const supplier = rowsSup.rows
             db.query(`SELECT beli.*,
-            gud.*,
-            sup.*,
-            pdetail.*,
-            var.*,
-            sat.*
+            pdetail.*
             FROM pembelian beli
-            INNER JOIN gudang gud ON gud.id_gudang = beli.id_gudang
-            INNER JOIN supplier sup ON sup.id_supplier = beli.id_supplier
             INNER JOIN penjualan_detail pdetail ON pdetail.no_invoice = beli.no_invoice_beli 
-            INNER JOIN varian var ON pdetail.id_varian = var.id_barang 
-            INNER JOIN satuan sat ON var.id_satuan = sat.id_satuan 
             WHERE beli.no_invoice_jual = $1`, [req.params.id], (err, rows_beli) => {
               if (err) {
                 return console.error(err.message);
