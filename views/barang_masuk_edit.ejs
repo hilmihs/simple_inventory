@@ -37,7 +37,7 @@
                     onblur="(this.type='text')" style="width: 96%;" >
                     <input type="hidden" name="id" id="id" value="<%= rows.id_transaksi_beli %>">
                     <input type="hidden" name="default_input" id="default_input" value="<%= rows.no_invoice_beli %>">
-                    <input type="hidden" name="default_date" id="default_date" value="<%= moment(rows.tanggaL_pembelian).format('DD MMMM YYYY') %>">
+                    <input type="hidden" name="default_date" id="default_date" value="<%= moment(rows.tanggal_pembelian).format('DD MMMM YYYY') %>">
                     </div>
                     <!-- <div class="row">
                         <div class="col-25">
@@ -266,7 +266,6 @@
             let no_invoice = '<%= rows.no_invoice_beli %>'
             let id_detail = '<%= rows.id_detail %>'
             let qty = '<%= rows.qty %>'
-            console.log($('#detail').val())
             $(function () {
                 readDetails()
                 $("#barang").on('propertychange input',function () {

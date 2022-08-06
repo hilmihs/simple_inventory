@@ -4,20 +4,26 @@ var moment = require('moment')
 module.exports = function (db) {
 
   router.get('/', function (req, res) { 
+    const page = req.query.page || 1
+    const limit = 3
+    const offset = (page - 1) * limit
     const { cari_id, cari_nama } = req.query
     let search = []
     let count = 1
     let syntax = []
+    let sql_count = 'SELECT count(*) AS total FROM satuan'
     let sql = 'select * from satuan'
     if (cari_id) {
       sql += ' WHERE '
+      sql_count += ' WHERE '
       search.push(`%${cari_id}%`)
       syntax.push(`id_satuan ILIKE $${count}`)
       count++
     } 
     if (cari_nama) {
       if (!sql.includes(' WHERE ')) {
-        sql += ' WHERE'
+        sql += ' WHERE '
+        sql_count += ' WHERE '
       }
       search.push(`%${cari_nama}%`)
       syntax.push(` nama_satuan ILIKE $${count}`)
@@ -27,12 +33,20 @@ module.exports = function (db) {
     if (syntax.length > 0) {
       sql += syntax.join(' AND ')
       sql += ` ORDER BY id_satuan ASC`
+      sql_count += syntax.join(' AND ')
+      sql_count += ` GROUP BY id_satuan`
+      sql_count += ` ORDER BY id_satuan ASC`
     }
+    console.log(sql, sql_count, search)
+    db.query(sql_count, search, (err, data) => {
+      if (err) console.log (err)
+      const pages = Math.ceil(data.rows[0].total / limit)
     db.query(sql, search, (err, rows) => {
       if (err) console.log(err)
       res.render('satuan', { rows: rows.rows, currentDir: 'settingdata', current: 'satuan' });
     })
   })
+})
 
   router.get('/info/:id', (req, res) => {
   
@@ -84,7 +98,7 @@ module.exports = function (db) {
       if (err) {
         return console.error(err.message);
       }
-      res.redirect('/')
+      res.redirect('/satuan')
     })
   })
 
@@ -94,7 +108,7 @@ module.exports = function (db) {
       if (err) {
         return console.error(err.message);
       }
-      res.redirect('/')
+      res.redirect('/satuan')
     })
   })
 

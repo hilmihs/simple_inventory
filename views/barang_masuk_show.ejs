@@ -146,7 +146,7 @@
                         <label for="total_harga_invoice">Total Harga</label>
                     </div>
                     <div class="col-75">
-                        <input type="number" id="total_harga_invoice" name="total_harga_invoice" placeholder="Total Harga" value="<%= pembelian.total_harga_beli %>"
+                        <input type="text" id="total_harga_invoice" name="total_harga_invoice" placeholder="Total Harga" value="<%= currencyFormatter.format(pembelian.total_harga_beli) %>"
                             readonly><br>
                     </div>
                 </div>
@@ -173,6 +173,7 @@
                         dataType: "json"
                     })
                         .done(function (response) {
+                            console.log(response)
                             response.forEach((item) => {
                                 if (item.id_barang == display) {
                                     $('#satuan').val(item.id_satuan)
@@ -191,10 +192,12 @@
                     e.preventDefault();
                     const kode_barang = $('select[name=barang]').val()
                     const qty = $('#tambah_stok').val()
+                    const supplier = $('select[name=supplier]').val()
+                    const gudag = $('select[name=supplier]').val()
                     $.post('/barang_masuk/additem', { no_invoice, kode_barang, qty }).done(function (data) {
                         readDetails()
                         console.log(data)
-                        $('#total_harga_invoice').val(currencyFormatter.format(data.total_harga))
+                        $('#total_harga_invoice').val(currencyFormatter.format(data.total_harga_beli))
                     })
                 })
             })

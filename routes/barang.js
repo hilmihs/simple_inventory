@@ -16,7 +16,8 @@ module.exports = function (db) {
     let sql_count = 'SELECT count(*) AS total FROM barang'
     let sql = 'SELECT * FROM barang'
     if (cari_id) {
-      sql += ' WHERE '
+      sql += ' WHERE'
+      sql_count += ' WHERE'
       search.push(`%${cari_id}%`)
       syntax.push(`id_barang ILIKE $${count}`)
       count++
@@ -24,6 +25,7 @@ module.exports = function (db) {
     if (cari_nama) {
       if (!sql.includes(' WHERE ')) {
         sql += ' WHERE'
+        sql_count += ' WHERE'
       }
       search.push(`%${cari_nama}%`)
       syntax.push(` nama_barang ILIKE $${count}`)
@@ -33,11 +35,13 @@ module.exports = function (db) {
     if (syntax.length > 0) {
       sql += syntax.join(' AND ')
       sql += ` ORDER BY id_barang ASC`
+      sql_count += syntax.join(' AND ')
+      sql_count += ` GROUP BY id_barang`
+      sql_count += ` ORDER BY id_barang ASC`
     }
-    
+
     db.query(sql_count, search, (err, data) => {
       if (err) console.log (err)
-      console.log(data)
       const pages = Math.ceil(data.rows[0].total / limit)
     db.query(sql, search, (err, rows) => {
       if (err) console.log(err)
@@ -95,7 +99,7 @@ module.exports = function (db) {
       if (err) {
         return console.error(err.message);
       }
-      res.redirect('/')
+      res.redirect('/barang')
     })
   })
 
@@ -105,7 +109,7 @@ module.exports = function (db) {
       if (err) {
         return console.error(err.message);
       }
-      res.redirect('/')
+      res.redirect('/barang')
     })
   })
 

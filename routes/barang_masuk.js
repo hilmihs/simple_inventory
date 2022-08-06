@@ -290,12 +290,12 @@ module.exports = function (db) {
             db.query(`SELECT beli.*,
             pdetail.*
             FROM pembelian beli
-            INNER JOIN penjualan_detail pdetail ON pdetail.no_invoice = beli.no_invoice_beli 
-            WHERE beli.no_invoice_jual = $1`, [req.params.id], (err, rows_beli) => {
+            INNER JOIN pembelian_detail pdetail ON pdetail.no_invoice = beli.no_invoice_beli 
+            WHERE beli.no_invoice_beli = $1`, [req.params.id], (err, rows_beli) => {
               if (err) {
                 return console.error(err.message);
               }
-              res.render('barang_masuk_edit', { rows: rows_beli.rows, currentDir: 'pembelian', current: '', satuan, gudang, varian, supplier });
+              res.render('barang_masuk_edit', { rows: rows_beli.rows, currentDir: 'pembelian', current: '', satuan, gudang, varian, supplier, moment });
             })
           })
         })

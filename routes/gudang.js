@@ -84,7 +84,7 @@ module.exports = function (db) {
       if (err) {
         return console.error(err.message);
       }
-      res.redirect('/')
+      res.redirect('/gudang')
     })
   })
 
@@ -94,7 +94,7 @@ module.exports = function (db) {
       if (err) {
         return console.error(err.message);
       }
-      res.redirect('/')
+      res.redirect('/gudang')
     })
   })
 

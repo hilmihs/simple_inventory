@@ -146,7 +146,7 @@
                         <label for="total_harga_invoice">Total Harga</label>
                     </div>
                     <div class="col-75">
-                        <input type="number" id="total_harga_invoice" name="total_harga_invoice" placeholder="Total Harga" value="<%= penjualan.total_harga_jual %>"
+                        <input type="text" id="total_harga_invoice" name="total_harga_invoice" placeholder="Total Harga" value="<%= currencyFormatter.format(penjualan.total_harga_jual) %>"
                             readonly><br>
                     </div>
                 </div>
@@ -194,7 +194,7 @@
                     $.post('/barang_keluar/additem', { no_invoice, kode_barang, qty }).done(function (data) {
                         readDetails()
                         console.log(data)
-                        $('#total_harga_invoice').val(currencyFormatter.format(data.total_harga))
+                        $('#total_harga_invoice').val(currencyFormatter.format(data.total_harga_jual))
                     })
                 })
             })

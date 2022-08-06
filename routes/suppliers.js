@@ -64,7 +64,7 @@ module.exports = function (db) {
             if (err) {
                 return console.error(err.message);
             }
-            res.redirect('/')
+            res.redirect('/suppliers')
         })
     })
 
@@ -86,7 +86,7 @@ module.exports = function (db) {
             if (err) {
                 return console.error(err.message);
             }
-            res.redirect('/')
+            res.redirect('/suppliers')
         })
     })
 
@@ -96,7 +96,7 @@ module.exports = function (db) {
             if (err) {
                 return console.error(err.message);
             }
-            res.redirect('/')
+            res.redirect('/suppliers')
         })
     })
 

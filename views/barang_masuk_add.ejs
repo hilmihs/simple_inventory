@@ -39,103 +39,6 @@
                     <br>
                     <br>
                 </form>
-                <form action="" method="post">
-                <div class="row">
-                    <div class="col-25">
-                        <label for="supplier">Supplier</label>
-                    </div>
-                    <div class="col-75">
-                        <select class="arrows" name="supplier" id="supplier" value="">
-                            <option disabled selected>Pilih Supplier</option>
-                            <% supplier.forEach((item)=> { %>
-                                <option value="<%= item.id_supplier %>">
-                                    <%= item.id_supplier %> - <%= item.nama_supplier %>
-                                </option>
-                                <% }) %>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="barang">Barang</label>
-                    </div>
-                    <div class="col-75">
-                        <select class="arrows" name="barang" id="barang" value="">
-                            <option disabled selected>Pilih Barang</option>
-                            <% varian.forEach((item)=> { %>
-                                <option value="<%= item.id_barang %>">
-                                    <%= item.id_barang %> - <%= item.nama_varian %>
-                                </option>
-                                <% }) %>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="satuan">Satuan</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="satuan" name="satuan" placeholder="Satuan" value="" disabled><br>
-
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="gudang">Gudang</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="text" id="gudang" name="gudang" placeholder="Gudang" value="" readonly><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="harga">Harga</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="number" step="any" id="harga" name="harga" placeholder="Harga" value=""
-                            readonly><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="stok">Stok</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="number" id="stok" name="stok" placeholder="Stok" value=""><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="tambah_stok">Tambah Stok Masuk</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="number" id="tambah_stok" name="tambah_stok" placeholder="Tambah Stok" value=""><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="total_stok">Total Stok</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="number" id="total_stok" name="total_stok" placeholder="Total Stok" value=""
-                            readonly><br>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-25">
-                        <label for="total_harga">Total Harga</label>
-                    </div>
-                    <div class="col-75">
-                        <input type="number" id="total_harga" name="total_harga" placeholder="Total Harga" value=""
-                            readonly><br>
-                    </div>
-                </div>
-                <div class="container" style="margin-top: 25px;">
-
-                    <button type="submit" class="btn btn-success"
-                        style="margin-right: 20px; float: right; clear:none;"><i class="bi bi-save"
-                            style="margin-right: 10px;"></i>Submit</button>
-                    </form>
                     <a href="/barang_masuk"><button type="button" class="btn btn-info"
                         style="margin-right: 20px; float: right; clear: none;"><i class="bi bi-arrow-up-left-square"
                             style="margin-right: 10px;"></i>Return to Barang Masuk</button></a>
@@ -192,18 +95,22 @@
             })
             document.getElementsByTagName('input')[0].addEventListener('click', function () {
                 document.getElementById('custom_input').setAttribute('disabled', true);
+                document.getElementById('custom_input').setAttribute('placeholder', 'Generated Automatically')
             });
-
+            
             document.getElementsByTagName('input')[1].addEventListener('click', function () {
                 document.getElementById('custom_input').removeAttribute('disabled');
+                document.getElementById('custom_input').setAttribute('placeholder', 'Type Invoice here')
             });
             document.getElementsByTagName('input')[3].addEventListener('click', function () {
-                $('#custom_date').val(new Date(Date.now()))
+                $('#custom_date').val(moment(new Date(Date.now())).format('DD MMMM YYYY'))
                 document.getElementById('custom_date').setAttribute('disabled', true);
             });
 
             document.getElementsByTagName('input')[4].addEventListener('click', function () {
                 document.getElementById('custom_date').removeAttribute('disabled');
+                $('#custom_date').val('')
+                document.getElementById('custom_date').setAttribute('placeholder', 'Choose Date..')
             });
 
         </script>

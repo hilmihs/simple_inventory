@@ -248,6 +248,7 @@ LEFT JOIN barang as b ON dp.id_varian = b.id_barang
 LEFT JOIN penjualan as p ON dp.no_invoice= p.no_invoice_jual WHERE dp.no_invoice = $1
 ORDER BY dp.id_detail;`, [req.params.no_invoice], (err, rows) => {
           if (err) console.log(err)
+          console.log(rows.rows)
           res.json(rows.rows)
         }) 
 })
