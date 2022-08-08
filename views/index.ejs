@@ -16,97 +16,227 @@
   <main class="d-flex flex-nowrap">
     <%- include('partials/menu') %>
 
-    <div class="  b-example-vr"></div>
-    <div class="container" style="overflow-y: scroll;">
-      <div class="card">
-        <div class="card-header">
+      <div class="  b-example-vr"></div>
+      <div class="container" style="overflow-y: scroll;">
+        <div class="card">
+          <div class="card-header">
             <h1>Transaksi Barang Masuk dan Barang Keluar</h1>
+          </div>
+          <div class="card-body">
+            <h3>Filter</h3>
+            <form action="" method="get">
+              <div class="row">
+                <div class="col-25">
+                  <label for="cari_id">Invoice</label>
+                </div>
+                <div class="col-75">
+                  <input type="text" id="cari_id" name="cari_id" placeholder="Invoice"
+                    value="<%= query.cari_id ? query.cari_id : '' %>"><br>
+                </div>
+              </div>
+              <br>
+              <label for="cari_tanggal_awal">Cari Tanggal</label>
+              <br>
+              <br>
+              <div class="row">
+                <div class="col-25">
+                  <label for="cari_tanggal_awal">Start Date</label>
+                </div>
+                <div class="col-75">
+                  <input type="text" id="cari_tanggal_awal" name="cari_tanggal_awal" placeholder="Choose Date.."
+                    value="<%= query.cari_tanggal_awal ? query.cari_tanggal_awal : '' %>" onfocus="(this.type='date')"
+                    onblur="(this.type='text')"><br>
+                </div>
+              </div>
+              <label for="between">to</label>
+              <div class="row">
+                <div class="col-25">
+                  <label for="cari_tanggal_akhir">End Date</label>
+                </div>
+                <div class="col-75">
+                  <input type="text" id="cari_tanggal_akhir" name="cari_tanggal_akhir" placeholder="Choose Date.."
+                    value="<%= query.cari_tanggal_akhir ? query.cari_tanggal_akhir : '' %>" onfocus="(this.type='date')"
+                    onblur="(this.type='text')"><br>
+                </div>
+                <br>
+                <br>
+                <br>
+                <div class="row">
+                  <div class="col-25">
+                    <label for="cari_id">Show</label>
+                  </div>
+                  <div class="col-75">
+                    <select class="form-select" id="show" name="show" style="width: 98%">
+                      <option value="beli" <%=show=="beli" ? 'selected' : null %>>Barang Masuk</option>
+                      <option value="jual" <%=show=="jual" ? 'selected' : null %>>Barang Keluar</option>
+                    </select>
+                  </div>
+                </div>
+
+              </div>
+              <div class="container" style="margin-top: 25px;">
+                <button type="submit" class="btn btn-info" style="margin-right: 20px"><i class="bi bi-search"
+                    style="margin-right: 10px;"></i>Search</button>
+                <a href="/"><button type="button" class="btn btn-warning" style="margin-right: 20px"><i
+                      class="bi bi-arrow-clockwise" style="margin-right: 10px;"></i>Reset</button></a>
+            </form>
+          </div>
+          <br>
+          <table id="tabel_masuk" class="table table-hover table-striped">
+            <thead class="table-primary">
+              <tr>
+                <th scope="col">No</th>
+                <th scope="col">No Invoice</th>
+                <th scope="col">Tanggal</th>
+                <th scope="col">Total Harga</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <% rows.forEach((item, index)=> { %>
+                <tr>
+                  <td scope="row">
+                    <%= index + 1 %>
+                  </td>
+                  <td>
+                    <a href="/barang_masuk/show/<%= item.no_invoice_beli %>">
+                      <%= item.no_invoice_beli %>
+                    </a>
+                    <a href="/barang_jual/show/<%= item.no_invoice_jual %>">
+                      <%= item.no_invoice_jual %>
+                    </a>
+                  </td>
+                  <td>
+                    <%= item.tanggal_pembelian ? moment(item.tanggal_pembelian).format('DD MMMM YYYY') : '' %>
+                      <%= item.tanggal_penjualan ? moment(item.tanggal_penjualan).format('DD MMMM YYYY') : '' %>
+                  </td>
+                  <td class="right-position">
+                    <%= item.total_harga_beli ? currencyFormatter.format(item.total_harga_beli) : '' %>
+                      <%= item.total_harga_jual ? currencyFormatter.format(item.total_harga_jual) : '' %>
+                  </td>
+                  <% }) %>
+                </tr>
+            </tbody>
+          </table>
+          <div class="card-body">
+            <table id="tabel_masuk" class="table table-hover table-striped">
+              <thead class="table-primary">
+                <tr>
+                  <th scope="col">Total Uang <%= detail_result[0].total_beli ? 'Masuk' : 'Keluar' %> dari <%=
+                        query.cari_tanggal_awal ? moment(query.cari_tanggal_awal).format('DD MMMM YYYY') : 'awal' %>
+                        sampai <%= query.cari_tanggal_akhir ? moment(query.cari_tanggal_akhir).format('DD MMMM YYYY')
+                          : 'akhir' %>
+                  </th>
+                  <th scope="col">
+                    <%= profit ? 'Profit' : '' %>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <tr>
+                  <td class="right-position <%= detail_result.total_beli ? 'table-warning' : 'table-success' %>">
+                    <%= detail_result.total_beli ? currencyFormatter.format(detail_result.total_beli) :
+                      currencyFormatter.format(total) %>
+                  </td>
+                  <td class="right-position <%= detail_result.total_beli ? 'table-warning' : 'table-success' %>">
+                    <%= detail_result[0].total_beli ? '' : currencyFormatter.format(profit) %>
+                  </td>
+
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <a
+              href="<%= currentPage == 1 ? currentUrl : currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${(currentPage - 1)}`) : `/?page=${(currentPage - 1)}` %>">Previous</a>
+            <% for (let i=1; i <=page; i++) { %>
+              <a href="<%= currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${i}`) : `/?page=${i}` %>"
+                class=<%=currentPage==i ? 'active' : null %>>
+                <%= i %>
+              </a>
+              <% } %>
+                <a
+                  href="<%= currentPage == page ? currentUrl : currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${(currentPage + 1)}`) : `/?page=${(currentPage + 1)}` %>">Next</a>
+          </div>
+          <div class="container" style="margin: 1px;">
+            <select class="form-select" id="cek_stok" name="cek_stok"
+              style="float: right; clear: none; margin-bottom: 2%; margin-right: 0.5%; width: 30%;">
+              <option value="0" id="cek_stok" name="cek_stok"
+                style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">Stok Tersedia</option>
+              <option value="50" id="cek_stok" name="cek_stok"
+                style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">Stok | 0 <= 50</option>
+              <option value="100" id="cek_stok" name="cek_stok"
+                style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%; width: 5px;">Stok |0 <= 100
+              </option>
+            </select>
+          </div>
+
+          <table id="tabel_varian" class="table table-hover table-striped table-success">
+            <thead class="table-info">
+              <tr>
+                <th scope="col">No.</th>
+                <th scope="col">ID</th>
+                <th scope="col">Nama</th>
+                <th scope="col">Stok</th>
+                <th scope="col">Harga Beli</th>
+                <th scope="col">Harga Jual</th>
+              </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
         </div>
-
-      <div class="container" style="margin: 1px;">
-        <select class="form-select" id="show" name="show" style="float: right; clear: none; margin-bottom: 2%; margin-right: 0.5%; width: 30%;">  
-          <option value="masuk" id="show" name="show" selected style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">Show | Barang Masuk</option>
-          <option value="keluar" id="show" name="show" style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">Show | Barang Keluar</option>
-        </select>
-    </div>
-      <table id="tabel_masuk" class="table table-hover table-striped">
-        <thead class="table-primary">
-          <tr>
-            <th scope="col">No</th>
-            <th scope="col">No Invoice</th>
-            <th scope="col">Tanggal</th>
-            <th scope="col">Supplier</th>
-            <th scope="col">ID Barang</th>
-            <th scope="col">Total Harga</th>
-            <th scope="col">Gudang</th>
-            <th scope="col">Quantity</th>
-          </tr>
-        </thead>
-        <tbody>
-
-        </tbody>
-      </table>
-      <div class="container" style="margin: 1px;">
-          <select class="form-select" id="cek_stok" name="cek_stok" style="float: right; clear: none; margin-bottom: 2%; margin-right: 0.5%; width: 30%;">
-            <option value="25" id="cek_stok" name="cek_stok" style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">Stok | 0 <= 25</option>
-            <option value="50" id="cek_stok" name="cek_stok" style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">Stok | 25 <= 50</option>
-            <option value="100" id="cek_stok" name="cek_stok" style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%; width: 5px;">Stok | 100+</option>
-          </select>
       </div>
+  </main>
+  <%- include('partials/script-footer') %>
+    <script>
+      $(document).ready(function () {
+        readVarian()
+        $("#cek_stok").change(function () {
+          let display = $("select[name=cek_stok]").val();
+          $.get(`/showvarian`).done(function (data) {
+            let html = ''
+            data.forEach((item, index) => {
+              if (parseInt(display) >= parseInt(item.stok_varian)) {
+                html += `
+                    
+                      <tr>
+              <th scope="row">
+                ${index + 1}
+              </th>
+              <td>
+                ${item.id_barang}
+              </td>
+              <td>
+                ${item.nama_varian}
+              </td>
+              <td>
+                ${item.stok_varian}
+              </td>
+              <td class="right-position">
+                ${currencyFormatter.format(item.harga_varian)}
+              </td>
+              <td class="right-position">
+                ${currencyFormatter.format(item.harga_jual)}
+              </td>
+            </tr>
+                    `
+              }
+            })
+            $('#tabel_varian tbody').html(html)
+          })
 
-      <table id="tabel_varian" class="table table-hover table-striped table-success">
-        <thead class="table-info">
-          <tr>
-            <th scope="col">No.</th>
-            <th scope="col">ID</th>
-            <th scope="col">Nama</th>
-            <th scope="col">Stok</th>
-            <th scope="col">Harga</th>
-            <th scope="col">Satuan</th>
-            <th scope="col">Gudang</th>
-          </tr>
-        </thead>
-        <tbody>
-         
-        </tbody>
-      </table>
-      <!-- <div class="card-body" style="float: left;
-clear: none; ">
-        <div class="card" style="width: 20%; padding: 2%; margin-bottom: 1%;;float: left; clear: none;">
-          <h6 style="margin-bottom: 5%; right:8%; bottom: 8%; position:relative; color:rgb(3, 7, 192)">Gudang 1</h6>
-          <h6 style="left:15%; top: 30%; position:relative; color:rgb(3, 7, 192);"><i class="bi bi-boxes fa-4x"></i> 150
-          </h6></i>
-        </div>
-        <div class="card"
-          style="width: 20%; padding: 2%; margin-bottom: 1%; left:3%; bottom:24.5%; position:relative; float: left; clear: none;">
-          <h6 style="margin-bottom: 5%; right:8%; bottom: 8%; position:relative; color:rgb(0, 92, 15)">Gudang 2</h6>
-          <h6 style="left:15%; top: 30%; position:relative; color:rgb(0, 92, 15);"><i class="bi bi-boxes fa-4x"></i> 150
-          </h6></i>
-        </div>
-        <div class="card"
-          style="width: 20%; padding: 2%; margin-bottom: 1%; margin-left: 3%; left:3%; bottom:24.5%; position:relative;float: left; clear: none;">
-          <h6 style="margin-bottom: 5%; right:8%; bottom: 8%; position:relative; color:rgb(170, 0, 212)">Gudang 3</h6>
-          <h6 style="left:15%; top: 30%; position:relative; color:rgb(170, 0, 212)  ;"><i class="bi bi-boxes fa-4x"></i>
-            150</h6></i>
-        </div>
-      </div> -->
-    </div>
-    </div>
-  </main>    
-  <%- include('partials/script-footer') %>     
-  <script>
-    $(document).ready(function () {
-      readBeli()
-      readVarian()
+        })
+      })
 
-    })
-
-    const readBeli = () => {
-            $.get(`/showbeli`).done(function (data) {
-              console.log(data)
-                let html = ''
-                data.forEach((item, index) => {
-                    html += `
+      const readBeli = () => {
+        $.get(`/showbeli`).done(function (data) {
+          console.log(data)
+          let html = ''
+          data.forEach((item, index) => {
+            html += `
                     <tr>
               <th scope="row">
                  ${index + 1} 
@@ -118,61 +248,58 @@ clear: none; ">
                  ${moment(item.tanggal_pembelian).format('DD MMMM YYYY')} 
               </td>
               <td>
-                 ${item.nama_supplier }
+                 ${item.nama_supplier}
               </td>
               <td>
-                 ${item.nama_barang }
+                 ${item.nama_barang}
+              </td>
+              <td class="right-position">
+                 ${item.total_harga_beli}
               </td>
               <td>
-                 ${item.total_harga_beli }
+                 ${item.nama_gudang}
               </td>
               <td>
-                 ${item.nama_gudang }
-              </td>
-              <td>
-                 ${item.qty }
+                 ${item.qty}
               </td>
             </tr>
                     `
-                })
-                $('#tabel_masuk tbody').html(html)
-            })
-        }
-        const readVarian = () => {
-            $.get(`/showvarian`).done(function (data) {
-                let html = ''
-                data.forEach((item, index) => {
-                    html += `
+          })
+          $('#tabel_masuk tbody').html(html)
+        })
+      }
+      const readVarian = () => {
+        $.get(`/showvarian`).done(function (data) {
+          let html = ''
+          data.forEach((item, index) => {
+            html += `
                     
                       <tr>
               <th scope="row">
-                ${ index + 1 }
+                ${index + 1}
               </th>
               <td>
-                ${ item.id_barang }
+                ${item.id_barang}
               </td>
               <td>
-                ${ item.nama_varian }
+                ${item.nama_varian}
               </td>
               <td>
-                ${ item.stok_varian }
+                ${item.stok_varian}
               </td>
-              <td>
-                ${ item.harga_varian }
+              <td class="right-position">
+                ${currencyFormatter.format(item.harga_varian)}
               </td>
-              <td>
-                ${ item.id_satuan }
-              </td>
-              <td>
-                ${ item.id_gudang }
+              <td class="right-position">
+                ${currencyFormatter.format(item.harga_jual)}
               </td>
             </tr>
                     `
-                })
-                $('#tabel_varian tbody').html(html)
-            })
-        }
-  </script>
+          })
+          $('#tabel_varian tbody').html(html)
+        })
+      }
+    </script>
 
 
-  <%- include('partials/footer') %>
+    <%- include('partials/footer') %>

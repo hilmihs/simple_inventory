@@ -128,7 +128,7 @@ module.exports = function (db) {
   })
   router.post('/add', function (req, res) {
     let date;
-    const { generate, custom_date, custom_input, tanggal, supplier, barang, kurang_stok } = req.body
+    const { generate, custom_date, custom_input, tanggal, supplier, barang, kurang_stok, gudang } = req.body
   //   db.query(`SELECT var.id_varian,
   //     var.nama_varian,
   //       bar.id_barang,
@@ -163,8 +163,8 @@ module.exports = function (db) {
           //   if (err) {
           //     return console.error(err.message);
           //   }
-            db.query(`INSERT INTO penjualan(no_invoice_jual, tanggal_penjualan) 
-             VALUES ($1, $2)`, [invoice, date], (err) => {
+            db.query(`INSERT INTO penjualan(no_invoice_jual, tanggal_penjualan, id_gudang) 
+             VALUES ($1, $2, $3)`, [invoice, date, gudang], (err) => {
               if (err) {
                 return console.error(err.message);
               }
@@ -209,6 +209,7 @@ module.exports = function (db) {
               const gudang = rowsG.rows
               const varian = rowsV.rows
               const supplier = rowsSup.rows
+              console.log(penjualan)
               res.render('barang_keluar_show', { currentDir: 'barang_keluar', current: '', penjualan, satuan, gudang, varian, supplier, moment, currencyFormatter });
             })
           })
@@ -243,10 +244,11 @@ module.exports = function (db) {
   })
 
   router.get('/details/:no_invoice', (req, res) => {
-db.query(`SELECT dp.*, b.nama_barang, p.* FROM penjualan_detail as dp 
-LEFT JOIN barang as b ON dp.id_varian = b.id_barang
-LEFT JOIN penjualan as p ON dp.no_invoice= p.no_invoice_jual WHERE dp.no_invoice = $1
-ORDER BY dp.id_detail;`, [req.params.no_invoice], (err, rows) => {
+db.query(`SELECT dp.*, b.nama_barang, p.*, v.nama_varian FROM penjualan_detail dp 
+LEFT JOIN barang b ON dp.id_varian = b.id_barang
+LEFT JOIN varian v ON dp.id_varian = v.id_barang
+LEFT JOIN penjualan p ON dp.no_invoice = p.no_invoice_jual WHERE dp.no_invoice = $1
+ORDER BY dp.id_varian ASC;`, [req.params.no_invoice], (err, rows) => {
           if (err) console.log(err)
           console.log(rows.rows)
           res.json(rows.rows)
@@ -260,7 +262,7 @@ router.get('/edit_detail/:id_detail', (req, res) => {
   LEFT JOIN penjualan as p ON dp.no_invoice = p.no_invoice_jual
   LEFT JOIN satuan as s ON v.id_satuan = s.id_satuan
   LEFT JOIN gudang as g ON g.id_gudang = p.id_gudang WHERE dp.id_detail = $1
-  ORDER BY dp.id_detail;`, [req.params.id_detail], (err, rows) => {
+  ORDER BY dp.id_varian ASC;`, [req.params.id_detail], (err, rows) => {
             if (err) console.log(err)
             res.json(rows.rows[0])
           })
@@ -288,7 +290,7 @@ router.get('/edit_detail/:id_detail', (req, res) => {
                 return console.error(err.message);
               }
               console.log(rows_beli.rows[0])
-              res.render('barang_keluar_edit', { rows: rows_beli.rows[0], currentDir: 'barang_keluar', current: '', satuan, gudang, varian, supplier, moment });
+              res.render('barang_keluar_edit', { rows: rows_beli.rows[0], currentDir: 'barang_keluar', current: '', satuan, gudang, varian, supplier, moment, currencyFormatter });
             })
           })
         })

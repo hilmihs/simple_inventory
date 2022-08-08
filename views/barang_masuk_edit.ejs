@@ -23,124 +23,44 @@
                 <br>
                 <form id="detail-form" action="" method="post">
                     <div class="card" style="padding: 10px;">
-                    <!-- <label><input type="radio" name="generate" id="generate" value="on" /> Auto Generate
-                        Invoice</label><br> 
-                    <input type="radio" name="generate" id="custom" value="off"/>-->
                     <label for="custom_input">Invoice</label>
                     <input type="text" name="custom_input" value="<%= rows.no_invoice_beli %>" id="custom_input" placeholder="Type Invoice here" style="width: 96%;" readonly>
                     <label for="custom_date">Date</label> 
-<!--                    
-                    <label><input type="radio" name="tanggal" id="date_now" value="on" /> Auto Generate Date (Today)</label><br>
-                    <label><input type="radio" name="tanggal" id="date_custom" value="off"/>Edit Date</label> -->
                     <input type="text" name="custom_date" id="custom_date" value="<%= moment(rows.tanggaL_pembelian).format('DD MMMM YYYY') %>" placeholder="Choose Date.." readonly
                     onfocus="(this.type='date')"
                     onblur="(this.type='text')" style="width: 96%;" >
                     <input type="hidden" name="id" id="id" value="<%= rows.id_transaksi_beli %>">
                     <input type="hidden" name="default_input" id="default_input" value="<%= rows.no_invoice_beli %>">
                     <input type="hidden" name="default_date" id="default_date" value="<%= moment(rows.tanggal_pembelian).format('DD MMMM YYYY') %>">
-                    </div>
-                    <!-- <div class="row">
+                    <div class="row">
                         <div class="col-25">
                             <label for="supplier">Supplier</label>
                         </div>
                         <div class="col-75">
                             <select class="arrows" name="supplier" id="supplier" value="">
-                                <option readonly selected>Pilih Supplier</option>
+                                <option disabled>Pilih Supplier</option>
                                 <% supplier.forEach((item) => { %>
-                                <option value="<%= item.id_supplier %>" <%= rows.id_supplier == item.id_supplier ? 'selected' : '' %>><%= item.id_supplier %> - <%= item.nama_supplier %></option>
+                                <option disabled value="<%= item.id_supplier %>" <%= rows.id_supplier == item.id_supplier ? 'selected' : '' %>>
+                                    <%= item.id_supplier %> - <%= item.nama_supplier %></option>
                                 <% }) %>
                             </select>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="barang">Barang</label>
-                        </div>
-                        <div class="col-75">
-                            <select class="arrows" name="barang" id="barang" value="">
-                                <option disabled selected>Pilih Barang</option>
-                                <% varian.forEach((item) => { %>
-                                <option value="<%= item.id_barang %>" <%= rows.id_varian == item.id_barang ? 'selected' : '' %>><%= item.id_barang %> - <%= item.nama_varian %></option>
-                                <% }) %>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="satuan">Satuan</label>
-                        </div>
-                        <div class="col-75">
-                            <input type="text" id="satuan" name="satuan" placeholder="Satuan" value="<%= rows.nama_satuan %>" readonly><br>
-                            
-                        </div>
-                       </div>
                     <div class="row">
                         <div class="col-25">
                             <label for="gudang">Gudang</label>
                         </div>
                         <div class="col-75">
-                            <input type="text" id="gudang" name="gudang" placeholder="Gudang" value="<%= rows.nama_gudang %>" readonly><br>
+                            <select class="arrows" name="gudang" id="gudang" value="">
+                                <option disabled>Pilih Gudang</option>
+                                <% gudang.forEach((item) => { %>
+                                <option disabled value="<%= item.id_gudang %>" <%= rows.id_gudang == item.id_gudang ? 'selected' : '' %>>
+                                    <%= item.id_gudang %> - <%= item.nama_gudang %></option>
+                                <% }) %>
+                            </select>
                         </div>
                         </div>
-                        <div class="row">
-                            <div class="col-25">
-                                <label for="harga_jual">Harga Beli</label>
-                            </div>
-                            <div class="col-75">
-                                <input type="number" step="any" id="harga_jual" name="harga_jual" placeholder="Harga Beli" value="<%= rows.harga_jual %>" readonly><br>
-                            </div>
-                        </div>
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="stok">Stok</label>
-                        </div>
-                        <div class="col-75">
-                            <input type="number" id="stok" name="stok" placeholder="Stok" value="<%= rows.stok_varian %>" readonly><br>
-                        </div>
-                    </div>
-                    <label><input type="radio" name="change" id="default_qty" value="on" /> Stok Keluar Tetap</label><br>
-                    <label><input type="radio" name="change" id="custom_qty" value="off"/> Ubah Stok Keluar</label>
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="kurang_stok" >Stok Keluar</label>
-                        </div>
-                        <div class="col-75">
-                            <input type="number" id="kurang_stok" name="kurang_stok" placeholder="Tambah Stok" value="<%= rows.qty %>" readonly><br>
-                            <input type="hidden" id="stok_old" name="stok_old" value="<%= rows.qty %>">
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="total_stok">Total Stok</label>
-                        </div>
-                        <div class="col-75">
-                            <input type="number" id="total_stok" name="total_stok" placeholder="Total Stok" value="<%= rows.stok_varian %>" readonly><br>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="total_harga">Total Harga</label>
-                        </div>
-                        <div class="col-75">
-                            <input type="number" id="total_harga" name="total_harga" placeholder="Total Harga" value="<%= rows.total_harga_jual %>" readonly><br>
-                        </div>
-                    </div> -->
-                    
-                        <div class="row">
-                            <div class="col-25">
-                                <label for="supplier">Supplier</label>
-                            </div>
-                            <div class="col-75">
-                                <select class="arrows" name="supplier" id="supplier" value="">
-                                    <option disabled selected>Pilih Supplier</option>
-                                    <% supplier.forEach((item)=> { %>
-                                        <option value="<%= item.id_supplier %>">
-                                            <%= item.id_supplier %> - <%= item.nama_supplier %>
-                                        </option>
-                                        <% }) %>
-                                </select>
-                            </div>
-                        </div>
+                    </div>                     
                         <div class="row">
                             <div class="col-25">
                                 <label for="barang">Barang</label>
@@ -163,14 +83,6 @@
                             <div class="col-75">
                                 <input type="text" id="satuan" name="satuan" placeholder="Satuan" value="" disabled><br>
     
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-25">
-                                <label for="gudang">Gudang</label>
-                            </div>
-                            <div class="col-75">
-                                <input type="text" id="gudang" name="gudang" placeholder="Gudang" value="" readonly><br>
                             </div>
                         </div>
                         <div class="row">
@@ -247,7 +159,7 @@
                         <label for="total_harga_invoice">Total Harga</label>
                     </div>
                     <div class="col-75">
-                        <input type="number" id="total_harga_invoice" name="total_harga_invoice" placeholder="Total Harga" value="<%= rows.total_harga_jual %>"
+                        <input type="text" id="total_harga_invoice" name="total_harga_invoice" placeholder="Total Harga" value="<%= currencyFormatter.format(rows.total_harga_beli) %>"
                             readonly><br>
                     </div>
                 </div>
@@ -264,11 +176,16 @@
     <%- include('partials/script-footer') %>
         <script>
             let no_invoice = '<%= rows.no_invoice_beli %>'
+            console.log(no_invoice)
             let id_detail = '<%= rows.id_detail %>'
             let qty = '<%= rows.qty %>'
             $(function () {
                 readDetails()
+               
                 $("#barang").on('propertychange input',function () {
+                    $('#tambah_stok').val(0)
+                    $('#total_stok').val(0)
+                    $('#total_harga').val(0)
                     let display = $("select[name=barang]").val();
                     $.ajax({
                     method: "GET",
@@ -279,7 +196,6 @@
                         response.forEach((item) => {
                             if (item.id_barang == display) {
                                 $('#satuan').val(item.id_satuan)
-                                $('#gudang').val(item.nama_gudang)
                                 $('#harga_jual').val(item.harga_jual)
                                 $('#stok').val(item.stok_varian)
                             }
@@ -297,7 +213,7 @@
                     const id_detail = $('#detail').val()
                     $.post('/barang_masuk/edititem', { id_detail, kode_barang, qty }).done(function (data) {
                         readDetails()
-                        console.log(data)
+                        
                         $('#total_harga_invoice').val(data.total_harga_beli)
                     })
                 })
@@ -349,7 +265,7 @@
                             ${item.id_varian}
                         </td>
                         <td>
-                            ${item.nama_barang}
+                            ${item.nama_varian}
                         </td>
                         <td class="right-position">
                             ${item.qty}
@@ -385,9 +301,9 @@
                         $('#harga_beli').val(response.harga_beli)
                         $('#stok').val(response.stok_varian)
                         $('#total_stok').val(response.stok_varian - response.qty)
-                        $('#total_harga').val(response.total_harga_beli)
+                        $('#total_harga').val(response.total_harga)
                         $('#barang').val(response.id_barang)
-                        $('#kurang_stok').val(response.qty)
+                        $('#tambah_stok').val(response.qty)
                         $('#detail').val(response.id_detail)
                       
                     }).fail(function (err) {

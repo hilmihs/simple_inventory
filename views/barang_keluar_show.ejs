@@ -28,24 +28,22 @@
                     <label for="custom_date">Date</label>
                     <input type="text" name="custom_date" id="custom_date"
                         value="<%= moment(penjualan.tanggal_penjualan).format('DD MMMM YYYY') %>" readonly>
-
+                        <div class="row">
+                            <div class="col-25">
+                                <label for="gudang">Gudang</label>
+                            </div>
+                            <div class="col-75">
+                                <select class="arrows" name="gudang" id="gudang" value="">
+                                    <option disabled>Pilih Gudang</option>
+                                    <% gudang.forEach((item) => { %>
+                                    <option disabled value="<%= item.id_gudang %>" <%= penjualan.id_gudang == item.id_gudang ? 'selected' : '' %>>
+                                        <%= item.id_gudang %> - <%= item.nama_gudang %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                            </div>
                 </div>
                 <form id="detail-form" action="" method="post">
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="supplier">Supplier</label>
-                        </div>
-                        <div class="col-75">
-                            <select class="arrows" name="supplier" id="supplier" value="">
-                                <option disabled selected>Pilih Supplier</option>
-                                <% supplier.forEach((item)=> { %>
-                                    <option value="<%= item.id_supplier %>">
-                                        <%= item.id_supplier %> - <%= item.nama_supplier %>
-                                    </option>
-                                    <% }) %>
-                            </select>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-25">
                             <label for="barang">Barang</label>
@@ -68,14 +66,6 @@
                         <div class="col-75">
                             <input type="text" id="satuan" name="satuan" placeholder="Satuan" value="" disabled><br>
 
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-25">
-                            <label for="gudang">Gudang</label>
-                        </div>
-                        <div class="col-75">
-                            <input type="text" id="gudang" name="gudang" placeholder="Gudang" value="" readonly><br>
                         </div>
                     </div>
                     <div class="row">
@@ -166,6 +156,9 @@
             $(function () {
                 readDetails()
                 $("#barang").change(function () {
+                    $('#kurang_stok').val(0)
+                    $('#total_stok').val(0)
+                    $('#total_harga').val(0)
                     let display = $("select[name=barang]").val();
                     $.ajax({
                         method: "GET",
@@ -176,7 +169,6 @@
                             response.forEach((item) => {
                                 if (item.id_barang == display) {
                                     $('#satuan').val(item.id_satuan)
-                                    $('#gudang').val(item.nama_gudang)
                                     $('#harga_jual').val(item.harga_jual)
                                     $('#stok').val(item.stok_varian)
                                 }
@@ -231,7 +223,7 @@
                             ${item.id_varian}
                         </td>
                         <td>
-                            ${item.nama_barang}
+                            ${item.nama_varian}
                         </td>
                         <td class="right-position">
                             ${item.qty}

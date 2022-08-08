@@ -63,7 +63,7 @@ module.exports = function (db) {
       sql_count += `  GROUP BY beli.no_invoice_beli`
       sql_count += ` ORDER BY beli.no_invoice_beli ASC`
     }
-    
+
     db.query(sql_count, search, (err, data) => {
       if (err) console.log('test count', err)
       const pages = Math.ceil(data.rows[0].total / limit)
@@ -131,72 +131,72 @@ module.exports = function (db) {
   router.post('/add', function (req, res) {
     let date;
     const { generate, custom_date, custom_input, tanggal, supplier, barang, gudang, tambah_stok } = req.body
-  //   db.query(`SELECT var.id_varian,
-  //     var.nama_varian,
-  //       bar.id_barang,
-  //     bar.nama_barang,
-  //       var.stok_varian,
-  //       var.harga_varian,
-  //       sat.id_satuan,
-  //       sat.nama_satuan,
-  //       gud.id_gudang,
-  //       gud.nama_gudang,
-  //       var.gambar_varian
-  // FROM varian var
-  // INNER JOIN barang bar ON bar.id_barang = var.id_barang
-  // INNER JOIN satuan sat ON sat.id_satuan = var.id_satuan
-  // INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE bar.id_barang = $1;`, [barang], (err, rows) => {
-  //     if (err) console.log(err)
-  //     const { stok_varian, harga_varian, id_gudang } = rows.rows[0]
-  //     let total = parseInt(tambah_stok) + stok_varian
-  //     let total_harga = parseInt(tambah_stok) * harga_varian
-      if (tanggal == 'off') {
-        date = custom_date;
-      } else {
-        date = new Date(Date.now())
-      }
-      if (generate == 'on') {
-        db.query('SELECT * FROM testing_invoice()', (err, rows) => {
-          if (err) console.log(err)
-          let invoice = rows.rows[0].testing_invoice
-          // db.query(`INSERT INTO pembelian_detail(id_varian, qty) 
-          //   VALUES ($1, $2)`, [barang, tambah_stok], (err) => {
-          //   if (err) {
-          //     return console.error(err.message);
-          //   }
-            db.query(`INSERT INTO pembelian(no_invoice_beli, tanggal_pembelian) 
-             VALUES ($1, $2)`, [invoice, date], (err) => {
-              if (err) {
-                return console.error(err.message);
-              }
-                res.redirect(`/barang_masuk/show/${invoice}`)
-             
-            })
-          // })
-        })
-
-      }
-      if (generate == 'off') {
-        let invoice = custom_input
-        db.query(`INSERT INTO pembelian(no_invoice_beli, tanggal_pembelian) 
-        VALUES ($1, $2)`, [invoice, date], (err) => {
+    //   db.query(`SELECT var.id_varian,
+    //     var.nama_varian,
+    //       bar.id_barang,
+    //     bar.nama_barang,
+    //       var.stok_varian,
+    //       var.harga_varian,
+    //       sat.id_satuan,
+    //       sat.nama_satuan,
+    //       gud.id_gudang,
+    //       gud.nama_gudang,
+    //       var.gambar_varian
+    // FROM varian var
+    // INNER JOIN barang bar ON bar.id_barang = var.id_barang
+    // INNER JOIN satuan sat ON sat.id_satuan = var.id_satuan
+    // INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE bar.id_barang = $1;`, [barang], (err, rows) => {
+    //     if (err) console.log(err)
+    //     const { stok_varian, harga_varian, id_gudang } = rows.rows[0]
+    //     let total = parseInt(tambah_stok) + stok_varian
+    //     let total_harga = parseInt(tambah_stok) * harga_varian
+    if (tanggal == 'off') {
+      date = custom_date;
+    } else {
+      date = new Date(Date.now())
+    }
+    if (generate == 'on') {
+      db.query('SELECT * FROM testing_invoice()', (err, rows) => {
+        if (err) console.log(err)
+        let invoice = rows.rows[0].testing_invoice
+        // db.query(`INSERT INTO pembelian_detail(id_varian, qty) 
+        //   VALUES ($1, $2)`, [barang, tambah_stok], (err) => {
+        //   if (err) {
+        //     return console.error(err.message);
+        //   }
+        db.query(`INSERT INTO pembelian(no_invoice_beli, tanggal_pembelian, id_gudang, id_supplier) 
+             VALUES ($1, $2, $3, $4)`, [invoice, date, gudang, supplier], (err) => {
           if (err) {
             return console.error(err.message);
           }
-          // db.query(`INSERT INTO pembelian_detail(id_varian, qty) 
-          //  VALUES ($1, $2)`, [barang, tambah_stok], (err) => {
-          //   if (err) {
-          //     return console.error(err.message);
-          //   }
-            db.query(`UPDATE varian SET stok_varian = $1 WHERE id_varian = $2`, [total, barang], (err) => {
-              if (err) {
-                return console.error(err.message);
-              }
-              res.redirect(`/barang_masuk/show/${invoice}`)
-            })
-          // })
+          res.redirect(`/barang_masuk/show/${invoice}`)
+
         })
-      }
+        // })
+      })
+
+    }
+    if (generate == 'off') {
+      let invoice = custom_input
+      db.query(`INSERT INTO pembelian(no_invoice_beli, tanggal_pembelian) 
+        VALUES ($1, $2)`, [invoice, date], (err) => {
+        if (err) {
+          return console.error(err.message);
+        }
+        // db.query(`INSERT INTO pembelian_detail(id_varian, qty) 
+        //  VALUES ($1, $2)`, [barang, tambah_stok], (err) => {
+        //   if (err) {
+        //     return console.error(err.message);
+        //   }
+        db.query(`UPDATE varian SET stok_varian = $1 WHERE id_varian = $2`, [total, barang], (err) => {
+          if (err) {
+            return console.error(err.message);
+          }
+          res.redirect(`/barang_masuk/show/${invoice}`)
+        })
+        // })
+      })
+    }
     // })
   })
 
@@ -250,29 +250,29 @@ module.exports = function (db) {
   })
 
   router.get('/details/:no_invoice', (req, res) => {
-    db.query(`SELECT db.*, b.nama_barang, p.* FROM pembelian_detail as db 
+    db.query(`SELECT db.*, b.nama_barang, p.*, v.nama_varian FROM pembelian_detail as db 
     LEFT JOIN barang as b ON db.id_varian = b.id_barang
-    LEFT JOIN pembelian as p ON db.no_invoice= p.no_invoice_beli WHERE db.no_invoice = $1
-    ORDER BY db.id_detail;`, [req.params.no_invoice], (err, rows) => {
-              if (err) console.log(err)
-              console.log(rows.rows)
-              res.json(rows.rows)
-            }) 
+    LEFT JOIN varian v ON db.id_varian = v.id_barang
+    LEFT JOIN pembelian as p ON db.no_invoice = p.no_invoice_beli WHERE db.no_invoice = $1
+    ORDER BY db.id_varian ASC;`, [req.params.no_invoice], (err, rows) => {
+      if (err) console.log(err)
+      res.json(rows.rows)
     })
+  })
 
-    router.get('/edit_detail/:id_detail', (req, res) => {
-      db.query(`SELECT db.*, b.*, v.*, p.*, g.*, s.* FROM pembelian_detail as db 
+  router.get('/edit_detail/:id_detail', (req, res) => {
+    db.query(`SELECT db.*, b.*, v.*, p.*, g.*, s.* FROM pembelian_detail as db 
       LEFT JOIN barang as b ON db.id_varian = b.id_barang
       LEFT JOIN varian as v ON b.id_barang = v.id_barang
       LEFT JOIN pembelian as p ON db.no_invoice = p.no_invoice_beli
       LEFT JOIN satuan as s ON v.id_satuan = s.id_satuan
       LEFT JOIN gudang as g ON g.id_gudang = p.id_gudang WHERE db.id_detail = $1
-      ORDER BY db.id_detail;`, [req.params.id_detail], (err, rows) => {
-                if (err) console.log(err)
-                res.json(rows.rows[0])
-              })
-              
-      })
+      ORDER BY db.id_varian ASC;`, [req.params.id_detail], (err, rows) => {
+      if (err) console.log(err)
+      res.json(rows.rows[0])
+    })
+
+  })
 
   router.get('/edit/:id', (req, res) => {
     db.query('SELECT * FROM satuan', (err, rowsS) => {
@@ -295,7 +295,7 @@ module.exports = function (db) {
               if (err) {
                 return console.error(err.message);
               }
-              res.render('barang_masuk_edit', { rows: rows_beli.rows, currentDir: 'pembelian', current: '', satuan, gudang, varian, supplier, moment });
+              res.render('barang_masuk_edit', { rows: rows_beli.rows[0], currentDir: 'barang_masuk', current: '', satuan, gudang, varian, supplier, moment, currencyFormatter });
             })
           })
         })
@@ -358,7 +358,7 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE bar.id_barang = $1;
           if (custom_input == default_input) {
             invoice = default_input
           }
-          let total = parseInt(stok_varian) - parseInt(stok_old) + parseInt(tambah_stok)  
+          let total = parseInt(stok_varian) - parseInt(stok_old) + parseInt(tambah_stok)
           db.query(sql_detail, params, (err) => {
             if (err) {
               return console.error(err.message, `ini pembelian detail`);
@@ -372,16 +372,16 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE bar.id_barang = $1;
               if (err) {
                 return console.error(err.message, `ini pembelian`);
               }
-                if (change != 'on') {
-              db.query(`UPDATE varian SET stok_varian = $1 WHERE id_barang = $2`, [total, barang], (err) => {
-                if (err) {
-                  return console.error(err.message);
-                }
+              if (change != 'on') {
+                db.query(`UPDATE varian SET stok_varian = $1 WHERE id_barang = $2`, [total, barang], (err) => {
+                  if (err) {
+                    return console.error(err.message);
+                  }
+                  res.redirect('/barang_masuk')
+                })
+              } else {
                 res.redirect('/barang_masuk')
-              })
-            } else {
-              res.redirect('/barang_masuk')
-            }
+              }
             })
           })
         })
@@ -389,15 +389,15 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE bar.id_barang = $1;
     }
   })
   router.get('/delete/:id', (req, res) => {
-   
-        db.query('DELETE FROM pembelian WHERE no_invoice_beli = $1', [req.params.id], (err) => {
-          if (err) {
-            return console.error(err.message);
-          }
-          
-            res.redirect('/barang_masuk')
-          })
-       
+
+    db.query('DELETE FROM pembelian WHERE no_invoice_beli = $1', [req.params.id], (err) => {
+      if (err) {
+        return console.error(err.message);
+      }
+
+      res.redirect('/barang_masuk')
+    })
+
   })
   return router;
 }
