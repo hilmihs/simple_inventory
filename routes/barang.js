@@ -1,13 +1,45 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment')
+const { isLoggedIn } = require('../helpers/util')
+const { currencyFormatter } = require('../helpers/util')
+
 module.exports = function (db) {
 
-  router.get('/', function (req, res) {
-    const page = req.query.page || 1
-    const limit = 3
-    const offset = (page - 1) * limit
+  router.get('/', isLoggedIn, function (req, res) {
+// Pagination preparation
+let limit = 5
+let currentOffset;
+let totalPage;
+let currentLink;
+let pageInput = parseInt(req.query.page)
+let totalData = 0
 
+if (!req.query.page) {
+  currentOffset = 1;
+  pageInput = 1;
+} else {
+  currentOffset = parseInt(req.query.page);
+}
+const offset = (limit * currentOffset) - limit;
+
+
+if (req.url === '/') {
+  currentLink = '/?page=1'
+} else {
+  if (req.url.includes('/?page')) {
+    currentLink = req.url
+  } else {
+    if (req.url.includes('&page=')) {
+      currentLink = req.url
+    } else {
+      if (req.url.includes('&page=')) {
+      } else {
+        currentLink = req.url + `&page=${pageInput}`
+      }
+    }
+  }
+}
 
     const { cari_id, cari_nama } = req.query
     let search = []
@@ -42,15 +74,26 @@ module.exports = function (db) {
 
     db.query(sql_count, search, (err, data) => {
       if (err) console.log (err)
-      const pages = Math.ceil(data.rows[0].total / limit)
+      totalData = data.rows[0].total
+      if (syntax.length > 0) {
+        data.rows.forEach((item) => {
+          totalData = parseInt(totalData) + parseInt(item.total)
+          if (totalData > parseInt(data.rows.length)) {
+            totalData -= 1
+          }
+        })
+      }
+      totalPage = Math.ceil(totalData / limit)
     db.query(sql, search, (err, rows) => {
       if (err) console.log(err)
-      res.render('barang', { rows: rows.rows, currentDir: 'settingdata', current: 'barang', pages, page });
+      res.render('barang', { rows: rows.rows, currentDir: 'settingdata', current: 'barang', page: totalPage, currentPage: pageInput, currencyFormatter,
+      currentUrl: currentLink, offset,
+     link: req.url, query: req.query, currencyFormatter  });
     })
   })
   })
 
-  router.get('/info/:id', (req, res) => {
+  router.get('/info/:id', isLoggedIn,  (req, res) => {
   
     db.query('SELECT * FROM barang WHERE id_barang = $1', [req.params.id], (err, rows) => {
       if (err) {
@@ -67,7 +110,7 @@ module.exports = function (db) {
     })
   })
 
-  router.get('/add', function (req, res) {
+  router.get('/add', isLoggedIn, function (req, res) {
     res.render('barang_add', { currentDir: 'settingdata', current: 'barang' });
   })
 
@@ -81,7 +124,7 @@ module.exports = function (db) {
     })
   })
 
-  router.get('/edit/:id', (req, res) => {
+  router.get('/edit/:id', isLoggedIn, (req, res) => {
    
     db.query('SELECT * FROM barang WHERE id_barang = $1', [req.params.id], (err, rows) => {
    
@@ -103,7 +146,7 @@ module.exports = function (db) {
     })
   })
 
-  router.get('/delete/:id', (req, res) => {
+  router.get('/delete/:id', isLoggedIn, (req, res) => {
   
     db.query('DELETE FROM barang WHERE id_barang = $1', [req.params.id], (err) => {
       if (err) {

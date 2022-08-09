@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment')
+const { isLoggedIn } = require('../helpers/util')
+
 module.exports = function (db) {
 
-    router.get('/', function (req, res) {
+    router.get('/', isLoggedIn, function (req, res) {
         const { cari_id, cari_nama } = req.query
         let search = []
         let count = 1
@@ -36,7 +38,7 @@ module.exports = function (db) {
         })
     })
 
-    router.get('/info/:id', (req, res) => {
+    router.get('/info/:id', isLoggedIn, (req, res) => {
 
         db.query('SELECT * FROM supplier WHERE id_supplier = $1', [req.params.id], (err, rows) => {
             if (err) {
@@ -53,7 +55,7 @@ module.exports = function (db) {
         })
     })
 
-    router.get('/add', function (req, res) {
+    router.get('/add', isLoggedIn, function (req, res) {
         res.render('supplier_add', { currentDir: 'suppliers', current: ''});
     })
 
@@ -68,7 +70,7 @@ module.exports = function (db) {
         })
     })
 
-    router.get('/edit/:id', (req, res) => {
+    router.get('/edit/:id', isLoggedIn, (req, res) => {
 
         db.query('SELECT * FROM supplier WHERE id_supplier = $1', [req.params.id], (err, rows) => {
 
@@ -90,7 +92,7 @@ module.exports = function (db) {
         })
     })
 
-    router.get('/delete/:id', (req, res) => {
+    router.get('/delete/:id', isLoggedIn, (req, res) => {
 
         db.query('DELETE FROM supplier WHERE id_supplier = $1', [req.params.id], (err) => {
             if (err) {

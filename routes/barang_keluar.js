@@ -5,13 +5,44 @@ var path = require('path');
 var moment = require('moment');
 const e = require('express');
 const { currencyFormatter } = require('../helpers/util')
+const { isLoggedIn } = require('../helpers/util')
 
 module.exports = function (db) {
 
-  router.get('/', function (req, res) {
-    const page = req.query.page || 1
-    const limit = 3
-    const offset = (page - 1) * limit
+  router.get('/', isLoggedIn, function (req, res) {
+// Pagination preparation
+let limit = 5
+let currentOffset;
+let totalPage;
+let currentLink;
+let pageInput = parseInt(req.query.page)
+let totalData = 0
+
+if (!req.query.page) {
+  currentOffset = 1;
+  pageInput = 1;
+} else {
+  currentOffset = parseInt(req.query.page);
+}
+const offset = (limit * currentOffset) - limit;
+
+
+if (req.url === '/') {
+  currentLink = '/?page=1'
+} else {
+  if (req.url.includes('/?page')) {
+    currentLink = req.url
+  } else {
+    if (req.url.includes('&page=')) {
+      currentLink = req.url
+    } else {
+      if (req.url.includes('&page=')) {
+      } else {
+        currentLink = req.url + `&page=${pageInput}`
+      }
+    }
+  }
+}
 
     const { cari_id, cari_nama, cari_tanggal_awal, cari_tanggal_akhir } = req.query
     let search = []
@@ -61,13 +92,26 @@ module.exports = function (db) {
       sql_count += `  GROUP BY jual.no_invoice_jual`
       sql_count += ` ORDER BY jual.no_invoice_jual ASC`
     }
-
+    sql += ` LIMIT 5 OFFSET ${offset}`
     db.query(sql_count, search, (err, data) => {
       if (err) console.log('test count', err)
-      const pages = Math.ceil(data.rows[0].total / limit)
+      totalData = data.rows[0].total
+              if (syntax.length > 0) {
+                data.rows.forEach((item) => {
+                  totalData = parseInt(totalData) + parseInt(item.total)
+                  if (totalData > parseInt(data.rows.length)) {
+                    totalData -= 1
+                  }
+                })
+              }
+              totalPage = Math.ceil(totalData / limit)
       db.query(sql, search, (err, rows) => {
         if (err) console.log('test sql', err)
-        res.render('barang_keluar', { rows: rows.rows, currentDir: 'barang_keluar', current: '', pages, page, moment, currencyFormatter });
+        res.render('barang_keluar', { rows: rows.rows,
+           currentDir: 'barang_keluar', current: '',  moment,
+           page: totalPage, currentPage: pageInput, currencyFormatter,
+           currentUrl: currentLink, offset,
+          link: req.url, query: req.query  });
       })
     })
   })
@@ -107,7 +151,7 @@ module.exports = function (db) {
     })
   })
 
-  router.get('/add', function (req, res) {
+  router.get('/add', isLoggedIn, function (req, res) {
     db.query('SELECT * FROM satuan', (err, rowsS) => {
       if (err) console.log(err)
       db.query('SELECT * FROM gudang', (err, rowsG) => {
@@ -129,26 +173,6 @@ module.exports = function (db) {
   router.post('/add', function (req, res) {
     let date;
     const { generate, custom_date, custom_input, tanggal, supplier, barang, kurang_stok, gudang } = req.body
-  //   db.query(`SELECT var.id_varian,
-  //     var.nama_varian,
-  //       bar.id_barang,
-  //     bar.nama_barang,
-  //       var.stok_varian,
-  //       var.harga_varian,
-  //       var.harga_jual,
-  //       sat.id_satuan,
-  //       sat.nama_satuan,
-  //       gud.id_gudang,
-  //       gud.nama_gudang,
-  //       var.gambar_varian
-  // FROM varian var
-  // INNER JOIN barang bar ON bar.id_barang = var.id_barang
-  // INNER JOIN satuan sat ON sat.id_satuan = var.id_satuan
-  // INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE bar.id_barang = $1;`, [barang], (err, rows) => {
-  //     if (err) console.log(err)
-  //     const { stok_varian, harga_varian, id_gudang, harga_jual } = rows.rows[0]
-  //     let total = stok_varian - parseInt(kurang_stok) 
-  //     let total_harga = parseInt(kurang_stok) * harga_varian
       if (tanggal == 'off') {
         date = custom_date;
       } else {
@@ -158,17 +182,12 @@ module.exports = function (db) {
         db.query('SELECT * FROM testing_invoice()', (err, rows) => {
           if (err) console.log(err)
           let invoice = rows.rows[0].testing_invoice
-          // db.query(`INSERT INTO penjualan_detail(id_varian, qty, no_invoice) 
-          //   VALUES ($1, $2, $3)`, [barang, kurang_stok, invoice], (err) => {
-          //   if (err) {
-          //     return console.error(err.message);
-          //   }
+    
             db.query(`INSERT INTO penjualan(no_invoice_jual, tanggal_penjualan, id_gudang) 
              VALUES ($1, $2, $3)`, [invoice, date, gudang], (err) => {
               if (err) {
                 return console.error(err.message);
               }
-            // })
             res.redirect(`/barang_keluar/show/${invoice}`)
           })
         })
@@ -193,7 +212,7 @@ module.exports = function (db) {
     // })
   })
 
-  router.get('/show/:no_invoice', (req, res) => {
+  router.get('/show/:no_invoice', isLoggedIn, (req, res) => {
     const no_invoice_jual = req.params.no_invoice
     db.query(`SELECT * FROM penjualan WHERE no_invoice_jual = $1`, [no_invoice_jual], (err, rows) => {
       const penjualan = rows.rows[0];
@@ -243,7 +262,7 @@ module.exports = function (db) {
     })
   })
 
-  router.get('/details/:no_invoice', (req, res) => {
+  router.get('/details/:no_invoice', isLoggedIn, (req, res) => {
 db.query(`SELECT dp.*, b.nama_barang, p.*, v.nama_varian FROM penjualan_detail dp 
 LEFT JOIN barang b ON dp.id_varian = b.id_barang
 LEFT JOIN varian v ON dp.id_varian = v.id_barang
@@ -255,7 +274,7 @@ ORDER BY dp.id_varian ASC;`, [req.params.no_invoice], (err, rows) => {
         }) 
 })
 
-router.get('/edit_detail/:id_detail', (req, res) => {
+router.get('/edit_detail/:id_detail', isLoggedIn, (req, res) => {
   db.query(`SELECT dp.*, b.*, v.*, p.*, g.*, s.* FROM penjualan_detail as dp 
   LEFT JOIN barang as b ON dp.id_varian = b.id_barang
   LEFT JOIN varian as v ON b.id_barang = v.id_barang
@@ -269,7 +288,7 @@ router.get('/edit_detail/:id_detail', (req, res) => {
           
   })
 
-  router.get('/edit/:id', (req, res) => {
+  router.get('/edit/:id', isLoggedIn, (req, res) => {
     db.query('SELECT * FROM satuan', (err, rowsS) => {
       if (err) console.log(err)
       db.query('SELECT * FROM gudang', (err, rowsG) => {
@@ -378,7 +397,7 @@ INNER JOIN gudang gud ON gud.id_gudang = var.id_gudang WHERE bar.id_barang = $1;
         })
       
   })
-  router.get('/delete/:id', (req, res) => {
+  router.get('/delete/:id', isLoggedIn, (req, res) => {
         db.query('DELETE FROM penjualan WHERE no_invoice_jual = $1', [req.params.id], (err) => {
           if (err) {
             return console.error(err.message);

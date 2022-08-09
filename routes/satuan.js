@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var moment = require('moment')
+const { isLoggedIn } = require('../helpers/util')
+
 module.exports = function (db) {
 
-  router.get('/', function (req, res) { 
+  router.get('/', isLoggedIn, function (req, res) { 
     const page = req.query.page || 1
     const limit = 3
     const offset = (page - 1) * limit
@@ -48,7 +50,7 @@ module.exports = function (db) {
   })
 })
 
-  router.get('/info/:id', (req, res) => {
+  router.get('/info/:id', isLoggedIn, (req, res) => {
   
     db.query('SELECT * FROM satuan WHERE id_satuan = $1', [req.params.id], (err, rows) => {
       if (err) {
@@ -65,7 +67,7 @@ module.exports = function (db) {
     })
   })
 
-  router.get('/add', function (req, res) {
+  router.get('/add', isLoggedIn, function (req, res) {
     res.render('satuan_add', { currentDir: 'settingdata', current: 'satuan' });
   })
 
@@ -79,7 +81,7 @@ module.exports = function (db) {
     })
   })
 
-  router.get('/edit/:id', (req, res) => {
+  router.get('/edit/:id', isLoggedIn, (req, res) => {
    
     db.query('SELECT * FROM satuan WHERE id_satuan = $1', [req.params.id], (err, rows) => {
    
@@ -102,7 +104,7 @@ module.exports = function (db) {
     })
   })
 
-  router.get('/delete/:id', (req, res) => {
+  router.get('/delete/:id', isLoggedIn, (req, res) => {
   
     db.query('DELETE FROM satuan WHERE id_satuan = $1', [req.params.id], (err) => {
       if (err) {

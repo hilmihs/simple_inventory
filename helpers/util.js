@@ -8,7 +8,7 @@ module.exports =  {
     //maximumFractionDigits: 0, // (causes 2500.99 to be printed as $2,501)
 }),
 isLoggedIn: (req, res, next) => {
-    console.log(req.session, req.session.user)
+    // console.log(req.session, req.session.user)
     if (req.session && req.session.user) {
         return next()
     }

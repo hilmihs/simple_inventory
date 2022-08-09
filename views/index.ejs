@@ -96,13 +96,13 @@
               <% rows.forEach((item, index)=> { %>
                 <tr>
                   <td scope="row">
-                    <%= index + 1 %>
+                    <%= index + 1 + offset %>
                   </td>
                   <td>
                     <a href="/barang_masuk/show/<%= item.no_invoice_beli %>">
                       <%= item.no_invoice_beli %>
                     </a>
-                    <a href="/barang_jual/show/<%= item.no_invoice_jual %>">
+                    <a href="/barang_keluar/show/<%= item.no_invoice_jual %>">
                       <%= item.no_invoice_jual %>
                     </a>
                   </td>
@@ -135,11 +135,11 @@
               <tbody>
 
                 <tr>
-                  <td class="right-position <%= detail_result.total_beli ? 'table-warning' : 'table-success' %>">
+                  <td class="right-position <%= detail_result[0].total_beli ? 'table-warning' : 'table-success' %>">
                     <%= detail_result.total_beli ? currencyFormatter.format(detail_result.total_beli) :
                       currencyFormatter.format(total) %>
                   </td>
-                  <td class="right-position <%= detail_result.total_beli ? 'table-warning' : 'table-success' %>">
+                  <td class="right-position <%= detail_result[0].total_beli ? 'table-warning' : 'table-success' %>">
                     <%= detail_result[0].total_beli ? '' : currencyFormatter.format(profit) %>
                   </td>
 
@@ -147,28 +147,33 @@
               </tbody>
             </table>
           </div>
-          <div class="pagination">
-            <a
-              href="<%= currentPage == 1 ? currentUrl : currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${(currentPage - 1)}`) : `/?page=${(currentPage - 1)}` %>">Previous</a>
-            <% for (let i=1; i <=page; i++) { %>
-              <a href="<%= currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${i}`) : `/?page=${i}` %>"
-                class=<%=currentPage==i ? 'active' : null %>>
-                <%= i %>
+          <ul class="pagination">
+            <li class="page-item<%= currentPage == 1 ? ' disabled' : '' %>">
+              <a class="page-link" href="<%= currentPage == 1 ? currentUrl : currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${(currentPage - 1)}`) : `/?page=${(currentPage - 1)}` %>"  aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
               </a>
-              <% } %>
-                <a
-                  href="<%= currentPage == page ? currentUrl : currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${(currentPage + 1)}`) : `/?page=${(currentPage + 1)}` %>">Next</a>
-          </div>
+            </li>
+            <% for (let i=1; i <=page; i++) { %> 
+              <li class="page-item<%= i == currentPage ? ' active' : '' %>"><a class="page-link" href="<%= currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${i}`) : `/?page=${i}` %>"
+               ><%= i %></a></li>
+               <% } %>
+              <li class="page-item<%= currentPage == page ? ' disabled' : '' %>">
+                <a class="page-link" href="<%= currentPage == page ? currentUrl : currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${(currentPage + 1)}`) : `/?page=${(currentPage + 1)}` %>" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              
+              </li>
+          </ul>
           <div class="container" style="margin: 1px;">
             <select class="form-select" id="cek_stok" name="cek_stok"
               style="float: right; clear: none; margin-bottom: 2%; margin-right: 0.5%; width: 30%;">
-              <option value="0" id="cek_stok" name="cek_stok"
+              <option value="50000" id="cek_stok" name="cek_stok"
                 style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">Stok Tersedia</option>
               <option value="50" id="cek_stok" name="cek_stok"
                 style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%;">Stok | 0 <= 50</option>
               <option value="100" id="cek_stok" name="cek_stok"
                 style="float: right; clear: none; margin-top: 0.5%; margin-right: 0.5%; width: 5px;">Stok |0 <= 100
-              </option>
+                  </option>
             </select>
           </div>
 

@@ -2,9 +2,10 @@ var express = require('express');
 var router = express.Router();
 var moment = require('moment')
 var { currencyFormatter } = require('../helpers/util')
+var { isLoggedIn } = require('../helpers/util')
 module.exports = function (db) {
 
-  router.get('/', function (req, res) {
+  router.get('/', isLoggedIn, function (req, res) {
 
  // Pagination preparation
  let limit = 5
@@ -12,7 +13,7 @@ module.exports = function (db) {
   let totalPage;
   let currentLink;
   let pageInput = parseInt(req.query.page)
-
+  let totalData = 0
 
   if (!req.query.page) {
     currentOffset = 1;
@@ -110,7 +111,6 @@ module.exports = function (db) {
     if (syntax.length > 0) {
       sql += syntax.join(' AND ')
       sql += ` ORDER BY ${show}.no_invoice_${show} ASC`
-      sql += ` LIMIT 5 OFFSET ${offset}`
       sql_count += syntax.join(' AND ')
       sql_count += `  GROUP BY ${show}.no_invoice_${show}`
       sql_count += ` ORDER BY ${show}.no_invoice_${show} ASC`
@@ -121,11 +121,13 @@ module.exports = function (db) {
       sql_profit += `  GROUP BY ${show}.no_invoice_${show}`
       sql_profit += ` ORDER BY ${show}.no_invoice_${show} ASC`
     }
+    sql += ` LIMIT 5 OFFSET ${offset}`
+    console.log(sql)
     const input = show == 'jual' ? sql_profit : sql_total
         db.query(`SELECT * FROM varian`, (err, rows) => {
           if (err) console.log(err)
           const varian = rows.rows  
-          console.log(input)
+         
           db.query(input, search, (err, rows) => {
             if (err) console.log(`input err ${err}`)
             const detail_result = rows.rows
@@ -143,13 +145,24 @@ module.exports = function (db) {
             }
             db.query(sql_count, search, (err, data) => {
               if (err) console.log('test count', err)
-              totalPage = Math.ceil(data.rows[0].total / limit)
+              totalData = data.rows[0].total
+              if (syntax.length > 0) {
+                data.rows.forEach((item) => {
+                  totalData = parseInt(totalData) + parseInt(item.total)
+                  if (totalData > parseInt(data.rows.length)) {
+                    totalData -= 1
+                  }
+                })
+              }
+             
+              totalPage = Math.ceil(totalData / limit)
+              console.log(totalPage, `ini jumlah halamannya`, totalData, data.rows, sql_count, data.rows.length)
               db.query(sql, search, (err, rows) => {
                 if (err) console.log('test sql', err)
             res.render('index', {
-              rows: rows.rows, varian, page: totalPage, currentPage: pageInput, currentUrl: currentLink,
+              rows: rows.rows, varian, page: totalPage, currentPage: pageInput, currentUrl: currentLink, offset,
               moment, link: req.url, detail_result, profit, total,
-              currentDir: 'home', current: '', currencyFormatter, show, query: req.query,
+              currentDir: 'home', current: '', currencyFormatter, show, query: req.query
             });
         })
       })

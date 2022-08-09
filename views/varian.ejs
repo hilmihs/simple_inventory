@@ -84,6 +84,23 @@
                 <% }) %>
         </tbody>
     </table>
+    <ul class="pagination">
+        <li class="page-item<%= currentPage == 1 ? ' disabled' : '' %>">
+          <a class="page-link" href="<%= currentPage == 1 ? currentUrl : currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${(currentPage - 1)}`) : `/varian/?page=${(currentPage - 1)}` %>"  aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <% for (let i=1; i <=page; i++) { %> 
+          <li class="page-item<%= i == currentPage ? ' active' : '' %>"><a class="page-link" href="<%= currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${i}`) : `/varian/?page=${i}` %>"
+           ><%= i %></a></li>
+           <% } %>
+          <li class="page-item<%= currentPage == page ? ' disabled' : '' %>">
+            <a class="page-link" href="<%= currentPage == page ? currentUrl : currentUrl.includes(`&page=${currentPage}`) ? currentUrl.replace(`&page=${currentPage}`, `&page=${(currentPage + 1)}`) : `/varian/?page=${(currentPage + 1)}` %>" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+           
+          </li>
+      </ul>
     <h2>Detail Varian</h2>
     <form action="" method="get">
         <div class="row">
